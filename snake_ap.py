@@ -6,7 +6,7 @@ import time
 import subprocess
 from subprocess import PIPE
 import argparse
-
+from Snake_Package.Death_wifi import *
 
 if os.geteuid() != 0 :
    print("\n[+] Run as root or sudo ")
@@ -20,6 +20,11 @@ class Fake_access_point:
      
       def __init__(self):
           self.args_Control()
+          if self.args.Death:
+             os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
+             print("\n[+] Snake add wlansnake intafeface wifi ....|| ")
+          else:
+                pass 
           self.Show_ap_all()
           self.Clean_IP_Table()
           self.Create_Fake()
@@ -27,7 +32,7 @@ class Fake_access_point:
           self.Create_dns_masq()        
           self.Start_InterFace()
           self.call_tremmial()
-
+          
       def Show_ap_all(self):
           if self.args.show:
               from Snake_Package.Show_AP import  Show_AP_all
@@ -35,8 +40,8 @@ class Fake_access_point:
               exit()    
       def Clean_IP_Table(self):
           Table_Flush = [
-           
-                            "sudo iptables -D FORWARD --in-interface wlan0mon -j ACCEPT"
+                            "sudo service NetworkManager start ",
+                            "sudo iptables -D FORWARD --in-interface "+f'{self.args.Interface}'+"mon"+" -j ACCEPT"
                        ]
           for _ in Table_Flush :
               call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
@@ -44,17 +49,8 @@ class Fake_access_point:
       def Create_Fake (self):
          
           ifconfig_command  = [   
-                                  
-                              # "sudo service NetworkManager stop" ,
-                               #"sudo service NetworkManager start ",
-                               #"sudo ifconfig wlan0 down",
-                               #"sudo iwconfig wlan0mon mode Monitor"
-                               #"sudo ifconfig wlan0 up ",
+                                      
                                "sudo airmon-ng start "
-                                #"sudo ifconfig wlan0 down",
-                                #"sudo iwconfig wlan0 mode Monitor ",
-                                #"sudo ifconfig wlan0 up"
-                                                           
                               ]
           for _ in  ifconfig_command :
              call_termminal = subprocess.call( _ +f'{self.args.Interface}',shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
@@ -112,19 +108,23 @@ class Fake_access_point:
               except Exception  :
                 continue                      
           Set_Up_access_point = [
+
                                   "ifconfig "+f'{self.args.Interface}'+'mon'+" up 192.168.1.1 netmask 255.255.255.0",
                                   "route add -net 192.168.1.0 netmask 255.255.255.0 gw\
                                    192.168.1.1",
+                                  "iptables --flush",
                                   "iptables --table nat --append POSTROUTING\
                                    --out-interface "+interface+" -j MASQUERADE",
                                   "iptables --append FORWARD --in-interface "+f'{self.args.Interface}'+"mon\
                                    -j ACCEPT",
+                                  "iptables -t nat -A POSTROUTING -j MASQUERADE",
                                   "echo 1 > /proc/sys/net/ipv4/ip_forward",
                                 ]
                                          
           for _ in Set_Up_access_point :
               call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)
       def call_tremmial(self):
+             
              subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
              order = Curent_dir+"/Snake_Package/Host_apd.py"             
              command_proc = ' gnome-terminal  -e ' +'"' + order  +'"'                  
@@ -133,12 +133,17 @@ class Fake_access_point:
              order2 = "dnsmasq -C dnsmasq.conf -d"
              command_proc2 = ' gnome-terminal  -e ' +'"' + order2 +'"'               
              call_termminal = subprocess.call(command_proc2,shell=True,stderr=subprocess.PIPE)
-
+             
+             if self.args.Death:                                
+                 run = Death_Router()  
+             else:
+                  pass 
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
-            parser.add_argument( '-I',"--Interface" ,metavar='' , action=None,required = True  )               
-            parser.add_argument(  "--show", action='store_true'  )
-            parser.add_argument( '-AP',"--APName" ,metavar='' , action=None )
+            parser.add_argument( '-I ',"--Interface" ,metavar='' , action=None,required = True ,help="Interface act AP 'Support AP Mode'" )               
+            parser.add_argument( '-S ',"--show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
+            parser.add_argument( '-AP ',"--APName" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
+            parser.add_argument( '-D ',"--Death" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
