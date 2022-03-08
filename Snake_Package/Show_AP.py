@@ -19,9 +19,16 @@ class Show_AP_all :
                    count +=1
                    time.sleep(0.20)
                    data = line.split()
-                   bssid,ssid,channal,saginel = data[0].replace('IN-USE',''),data[1].replace('BSSID',''),data[3].replace('MODE',''),data[6].replace('SIGNAL','')
-                   print("| "+' '+f"{ bssid:<22}","| "+' ' +f"{ ssid[0:20]:<20}"+" | "+'   '+f"{ channal:<9}"," | "+'   '+f"{ saginel:<9}""  |")
+                   try:
+                      bssid,ssid,channal,saginel = data[0].replace('IN-USE',''),data[1].replace('BSSID',''),data[3].replace('MODE',''),data[6].replace('SIGNAL','')
+                      print("| "+' '+f"{ bssid:<22}","| "+' ' +f"{ ssid[0:20]:<20}"+" | "+'   '+f"{ channal:<9}"," | "+'   '+f"{ saginel:<9}""  |")
+                   except IndexError : 
+                       os.remove('outputee.txt') 
+                       count = count -1
+                       print('\n\n'+'='*30+'\n\n'+'[*] total access point -----|> ', str(count))  
+                       exit()
           os.remove('outputee.txt') 
+          count = count -1
           print('\n\n'+'='*30+'\n\n'+'[*] total access point -----|> ', str(count))  
 if __name__=='__main__':
    Show_AP_all()
