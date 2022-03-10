@@ -13,6 +13,7 @@ if os.geteuid() != 0 :
    exit()
 else:
     pass
+os.system("sudo fuser -k 53/udp >/dev/null 2>&1 ")  
 Curent_dir  = os.path.abspath(os.getcwd())
 user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
 
