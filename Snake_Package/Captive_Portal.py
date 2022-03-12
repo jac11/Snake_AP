@@ -37,6 +37,7 @@ class Captive_Portal:
                         os.remove("/etc/apache2/sites-enabled/000-default.txt")
                         print("[+] Captive Portal Server is Up...") 
                     else:
+                        os.system("systemctl restart apache2 >/dev/null 2>&1")
                         print("[+] Captive Portal Server is Up...") 
 if __name__=='__main__':
    Captive_Portal()
