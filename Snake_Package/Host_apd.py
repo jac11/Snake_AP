@@ -8,8 +8,8 @@ Banner = """
         __
        {0O}
        \__/
-       /^/  FAKE ACCESS PINT START
-      / /____  TO exit press CTRL+C   
+       /^/  SNAKE ACCESS POINT START
+      / /____  TO exit  CTRL+C   
      (_______) BY : JACSTROY
    _(_________)_ 
   (_____________)0o    
