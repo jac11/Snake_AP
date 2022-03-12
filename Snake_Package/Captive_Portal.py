@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-import subprocess
 import sys
 import os
-import time 
 
 Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
 Root_Web      = "        DocumentRoot /var/www/html"
