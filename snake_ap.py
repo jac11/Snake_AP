@@ -9,10 +9,12 @@ import argparse
 from Snake_Package.Deauth_wifi import Deauth_Router
 
 if os.geteuid() != 0 :
-   print("\n[+] Run as root or sudo ")
+   print("\n[+] Run as root or sudo\n ")
    exit()
 else:
     pass
+ 
+
 os.system("sudo fuser -k 53/udp >/dev/null 2>&1 ")  
 Curent_dir  = os.path.abspath(os.getcwd())
 user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
@@ -23,9 +25,17 @@ class Fake_access_point:
           self.args_Control()
           if self.args.Deauth :
              os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
-             print("\n[+] Snake add wlansnake intafeface wifi ....|| ")
+             print("\n[+] Snake add wlansnake intafeface wifi ....||  ")
           else:
                 pass 
+          if self.args.List:
+             list_Interface = os.listdir('/sys/class/net/') 
+             print("\n[+] List of Interfaces : \n"+("="*20)+"\n")
+             for device in list_Interface :
+                 print("[*] Interface : ",device)
+             print()
+             exit()           
+          self.check_InterFace()
           self.Show_ap_all()
           self.Clean_IP_Table()
           self.Create_Fake()
@@ -34,8 +44,19 @@ class Fake_access_point:
           self.Start_InterFace()
           self.call_tremmial()
           
+      def check_InterFace(self):
+          if self.args.Interface:
+             list_Interface = os.listdir('/sys/class/net/') 
+             if self.args.Interface in list_Interface:
+                pass
+             else:
+               print("[*] | "+str(self.args.Interface)+ " |: error fetching interface information: Device not found") 
+               print("[*] use -L/--List to list all interface available")
+               exit()
+          else:
+              pass          
       def Show_ap_all(self):
-          if self.args.show:
+          if self.args.Show:
               from Snake_Package.Show_AP import  Show_AP_all
               run = Show_AP_all()
               exit()    
@@ -149,11 +170,12 @@ class Fake_access_point:
                 run = Captive_Portal()
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
-            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = True ,help="Interface act AP 'Support AP Mode'" )               
-            parser.add_argument( '-S  ',"--show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
+            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = False ,help="Interface act AP 'Support AP Mode'" )               
+            parser.add_argument( '-S  ',"--Show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
             parser.add_argument( '-AP ',"--APName" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
             parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
             parser.add_argument( '-CP ',"--Portal", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
+            parser.add_argument( '-L ',"--List", action='store_true'  ,help = "list all Interface available ")
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
