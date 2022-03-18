@@ -1,10 +1,1 @@
- -------------------------------------------------------
-|        EMAIL              |          PASSWORD         |
- -------------------------------------------------------
-|   jacstory@gmail.com      |    jac11                  |
-|   ahmedhammad@gmail.com   |    12345678               |
-|   Baca@hotmail.com        |    asdfgh                 |
-|   ailaki@gmail.com        |    123AsdZx233            |
-|   chefNabile@gmail.com    |    1234567890             |
-|   josam@gmail.com         |    33223344               |
-|   liverpool@gmail.com     |    jacstory@123456        |
+
