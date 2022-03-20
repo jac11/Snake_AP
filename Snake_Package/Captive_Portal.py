@@ -76,8 +76,6 @@ class Captive_Portal:
                           apache2_conf_txt = apache2_conf.read()
                 with open("/etc/apache2/apache2.conf",'w') as apache2_conf_write :
                           apache2_conf_write = apache2_conf_write.write(apache2_conf_txt)
-                print('[+] reset Configauriton Files ....Done !!')
-                print("[+] Captive Portal Server is Up...") 
                 self.Captive_Pr_Set()
               
             else:   
