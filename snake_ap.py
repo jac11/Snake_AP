@@ -190,7 +190,7 @@ class Fake_access_point:
                 os.system(group)
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
-            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = True ,help="Interface act AP 'Support AP Mode'" )                           
+            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = Fales ,help="Interface act AP 'Support AP Mode'" )                           
             parser.add_argument( '-S  ',"--Show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
             parser.add_argument( '-AP ',"--APName" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
             parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
