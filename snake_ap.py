@@ -12,6 +12,7 @@ from Snake_Package.banner import *
 print(Banner2)
 if os.geteuid() != 0 :
     print("\n[+] Run as root or sudo ")
+    exit()
 else:
     pass
 os.system("sudo fuser -k 53/udp >/dev/null 2>&1 ")
