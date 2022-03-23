@@ -53,7 +53,7 @@ class Fake_access_point:
      
       def __init__(self):
           self.args_Control()                 
-          if self.args.List:
+          if self.args.List :
              all_Interface = os.listdir('/sys/class/net/') 
              print("[+] List of Devices avelable "+'\n'+('='*20)+'\n')
              for interface in all_Interface :
@@ -63,7 +63,13 @@ class Fake_access_point:
              print("usage: snake_ap.py [-h] [-I  ] [-S ] [-AP ] [-D  ] [-CP] [-L]")
              print("snake_ap.py: error: argument -I  /--Interface: required ")
              exit()
-          print("[+] ChecK Paskages ....Done !! ")
+          if self.args.Interface :
+              all_Interface = os.listdir('/sys/class/net/') 
+              if (self.args.Interface in all_Interface) or (str(self.args.Interface)+'mon' in all_Interface) :
+                 print("[+] ChecK Paskages ....Done !! ")              
+              else:
+                 print("[+] fetching interface information : Device not found under Name ", self.args.Interface)
+                 exit()  
           if self.args.Deauth :
              os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
