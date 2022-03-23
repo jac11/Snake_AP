@@ -113,7 +113,7 @@ class Fake_access_point:
                    os.mkdir(Curent_dir+"/Snake_config/") 
                    group  = "chown "+ user_name+ ":"+user_name +" *" 
                    os.system(group)             
-                   print("[+]  Sanke_AP Configrution hostapd and dnsmasq  is create " )                   
+                   print("[+] Sanke_AP Configrution hostapd and dnsmasq  is create " )                   
                    with open ('/etc/hostapd/hostapd.conf','w') as pathconfig :
                        pathconfig.write("DAEMON_CONF="+Curent_dir+"/Snake_config/hostapd.conf")               
               os.chdir(os.path.dirname(__file__)+"/Snake_config/")              
@@ -134,7 +134,7 @@ class Fake_access_point:
               group  = "chown "+ user_name+ ":"+user_name +" ./hostapd.conf" 
               os.system(group)           
       def Create_dns_masq(self):
-              with open(os.path.dirname(__file__)+"/Snake_config/dnsmasq.conf",'w') as dnsmasq:
+              with open("./dnsmasq.conf",'w') as dnsmasq:
                     
                    dnsmasq.write(
                                    'no-resolv'+'\n'\
@@ -148,9 +148,9 @@ class Fake_access_point:
                                    "listen-address= 127.0.0.1"+'\n'                                
                                 )  
               if self.args.Portal:
-                      with open(os.path.dirname(__file__)+"/Snake_config/dnsmasq.conf",'a') as dnsmasq :
+                      with open("./dnsmasq.conf",'a') as dnsmasq :
                                       dnsmasq.write("address=/#/192.168.1.1"+"\n")   
-              group  = "chown "+ user_name+ ":"+user_name +" "+ os.path.dirname(__file__)+"/Snake_config/dnsmasq.conf" 
+              group  = "chown "+ user_name+ ":"+user_name +" "+"dnsmasq.conf" 
               os.system(group) 
       def Start_InterFace(self):
           all_Interface = os.listdir('/sys/class/net/') 
