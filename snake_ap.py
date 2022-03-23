@@ -52,14 +52,23 @@ Check_Packages()
 class Fake_access_point:
      
       def __init__(self):
-          self.args_Control()
+          self.args_Control()                 
+          if self.args.List:
+             all_Interface = os.listdir('/sys/class/net/') 
+             print("[+] List of Devices avelable "+'\n'+('='*20)+'\n')
+             for interface in all_Interface :
+                 print("[+] Interface : ",interface)
+             exit()
+          if 'None' in str(self.args.Interface):
+             print("usage: snake_ap.py [-h] [-I  ] [-S ] [-AP ] [-D  ] [-CP] [-L]")
+             print("snake_ap.py: error: argument -I  /--Interface: required ")
+             exit()
           print("[+] ChecK Paskages ....Done !! ")
           if self.args.Deauth :
              os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
           else:
                 pass 
-          
           self.Show_ap_all()
           self.Clean_IP_Table()
           self.Create_Fake()
@@ -195,12 +204,14 @@ class Fake_access_point:
             parser.add_argument( '-AP ',"--APName" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
             parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
             parser.add_argument( '-CP ',"--Portal", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
+            parser.add_argument( '-L ',"--List", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
             else:
                  parser.print_help()
                  exit()                   
+                          
            
    
 if __name__=='__main__':
