@@ -201,7 +201,7 @@ class Fake_access_point:
                 command_run = Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"
                 command_proc3 = ' gnome-terminal  -e ' +'"' + command_run +'"'               
                 call_termminal = subprocess.call(command_proc3,shell=True,stderr=subprocess.PIPE)
-                group  = "chown "+ user_name+ ":"+user_name +  Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt" 
+                group  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt" 
                 os.system(group)
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
