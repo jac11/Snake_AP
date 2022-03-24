@@ -3,6 +3,8 @@
 
 import sys
 import os
+import subprocess
+from subprocess import PIPE
 
 Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
 Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
@@ -53,10 +55,12 @@ class Captive_Portal:
                              Read_Info = Reread_Config.read()
                    with open("/etc/apache2/apache2.conf",'w') as write_Config_FIE :
                              Copy_Info = write_Config_FIE.write(Read_Info +'\n'+'ServerName  127.0.0.1')
-                   os.system('sudo a2enmod dump_io >/dev/null 2>&1')
+                   command1 = 'sudo a2enmod dump_io >/dev/null 2>&1'
+                   subprocess.call(command1,shell=True,stderr=subprocess.PIPE)
                    os.system('sudo systemctl reload httpd.service >/dev/null 2>&1')
                    os.system("systemctl restart apache2 >/dev/null 2>&1")
-                   os.system("sudo a2enmod dumpio")
+                   command = "sudo a2enmod dumpio"
+                   subprocess.call(command,shell=True,stderr=subprocess.PIPE)
                    os.remove("/etc/apache2/sites-enabled/000-default.txt")
                    os.remove("/etc/apache2/apache2conf.txt")
                    print("[+] Captive Portal Server is Up...") 
