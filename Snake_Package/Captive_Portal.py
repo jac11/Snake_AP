@@ -27,7 +27,7 @@ class Captive_Portal:
       def __init__(self):
          self.Check_Status()
       def Captive_Pr_Set(self):
-                   print("[*] Captive Portal Mode in Precoess !!")
+                   print("[*] Captive Portal Mode in processing ....Done !!")
                    with open ("/etc/apache2/sites-enabled/000-default.conf",'r') as FILE_RE :
                         FILE_RE_ACT  = FILE_RE.readlines()
                    for line in FILE_RE_ACT :                               
@@ -59,7 +59,7 @@ class Captive_Portal:
                    subprocess.call(command1,shell=True,stderr=subprocess.PIPE)
                    os.system('sudo systemctl reload httpd.service >/dev/null 2>&1')
                    os.system("systemctl restart apache2 >/dev/null 2>&1")
-                   command = "sudo a2enmod dumpio"
+                   command = "sudo a2enmod dumpio >/dev/null 2>&1"
                    subprocess.call(command,shell=True,stderr=subprocess.PIPE)
                    os.remove("/etc/apache2/sites-enabled/000-default.txt")
                    os.remove("/etc/apache2/apache2conf.txt")
