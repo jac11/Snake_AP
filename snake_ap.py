@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 import os 
 import sys
 import time
@@ -72,6 +73,15 @@ class Fake_access_point:
                  print("[+] fetching interface information : Device not found under Name ", self.args.Interface)
                  exit()  
           if self.args.Deauth :
+             Mac_Format = re.compile(r'(?:[0-9a-fA-F]:?){12}')
+             Mac_found = re.findall(Mac_Format , self.args.Deauth  )
+             if self.args.Deauth  in Mac_found:
+                pass
+             else:
+                 print("\n"+"[+] Invalid Mac address")
+                 print("[+] Invalid literal for int() with base 16")
+                 print("[+] Mac format = xx:xx:xx:xx:xx:xx")
+                 exit() 
              os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
           else:
