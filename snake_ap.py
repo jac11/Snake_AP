@@ -54,17 +54,22 @@ class Fake_access_point:
      
       def __init__(self):
           self.args_Control()  
-          self.Show_ap_all()               
-          if self.args.List :
+          if self.args.List and len(sys.argv)==2:
              all_Interface = os.listdir('/sys/class/net/') 
              print("[+] List of Devices avelable "+'\n'+('='*20)+'\n')
              for interface in all_Interface :
                  print("[+] Interface : ",interface)
              exit()
+          elif self.args.List and len(sys.argv)!=2 :
+              print("[*] error : argumet -L/--List ")
+              print("[+] use the option with out argumet < sudo ./snake_ap.py -L > ")
+              exit()
+          self.Show_ap_all() 
           if 'None' in str(self.args.Interface):
              print("usage: snake_ap.py [-h] [-I  ] [-S ] [-AP ] [-D  ] [-CP] [-L]")
              print("snake_ap.py: error: argument -I  /--Interface: required ")
              exit()
+                               
           if self.args.Interface :
               all_Interface = os.listdir('/sys/class/net/') 
               if (self.args.Interface in all_Interface) or (str(self.args.Interface)+'mon' in all_Interface) :
@@ -94,10 +99,17 @@ class Fake_access_point:
           self.call_tremmial()
           
       def Show_ap_all(self):
-          if self.args.Show:
-              from Snake_Package.Show_AP import  Show_AP_all
-              run = Show_AP_all()
-              exit()    
+          try:
+             if self.args.Show and (len(sys.argv)==2):
+                from Snake_Package.Show_AP import  Show_AP_all
+                run = Show_AP_all()
+                exit() 
+             elif self.args.Show and (len(sys.argv)!=2):
+                  print("[*] error : argumet -S/--Show ")
+                  print("[+] use the option with out argumet < sudo ./snake_ap.py -S > ")
+                  exit()
+          except KeyboardInterrupt :
+                 exit() 
       def Clean_IP_Table(self):
           Table_Flush = [
                             "sudo service NetworkManager start ",
@@ -249,4 +261,3 @@ class Fake_access_point:
    
 if __name__=='__main__':
      Fake_access_point()
-
