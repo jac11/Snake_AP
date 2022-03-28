@@ -3,17 +3,19 @@
 import sys
 import time
 import os
-Path_Re = "/".join(os.path.abspath(__file__).split('/'))[:-16]
+
+Path_St = "/".join(os.path.abspath(__file__).split('/'))[:-16]
+
 class Get_Info :
     
      def __init__(self):
         self.Get_Password()
      def Get_Password(self):
-    
+     
          print(" "+"-"*55)
          print("| "+f"{'       EMAIL    ':<25}","| "+f"{'         PASSWORD   ':<25} |")
          print(" "+"-"*55)
-         with open(Path_Re+'log_error.log') as Log_Handel :
+         with open(Path_St+'log_error.log') as Log_Handel :
               Log_read = Log_Handel.readlines()
          for line in Log_read :   
             if "auth_" in  line :
