@@ -92,10 +92,11 @@ class Fake_access_point:
           else:
                 pass       
           self.Clean_IP_Table()
-          self.Create_Fake()
+         
           self.Create_File_hostapd()     
           self.Create_dns_masq()        
           self.Start_InterFace()
+          self.Create_Fake()
           self.call_tremmial()
           
       def Show_ap_all(self):
@@ -184,15 +185,26 @@ class Fake_access_point:
                 exit() 
       def Start_InterFace(self):
           try:
+            
              all_Interface = os.listdir('/sys/class/net/') 
-             for interface in all_Interface :
-                 try:  
-                    command = 'ping -I '+f'{interface}'+' -w1 www.google.com  >/dev/null 2>&1 '   
-                    communicate = os.system(command) 
-                    if communicate  == 0 :
-                       break          
+             if self.args.Interface in all_Interface :
+                 all_Interface.remove(self.args.Interface)
+             count = 0
+             for interface in all_Interface  :
+                 try:   
+                    
+                     command = 'ping -I '+f'{interface}'+' -w1 www.google.com  >/dev/null 2>&1 '   
+                     communicate = os.system(command)
+                     count +=1
+                     if communicate  == 0 :
+                        break
+                     else:
+                         if  communicate == 512 and count == len( all_Interface):
+                             print("[+] No Interface have Internet to Share Connection")
+                             exit()
                  except Exception  :
-                    continue                      
+                        continue     
+                          
              Set_Up_access_point = [
 
                                   "ifconfig "+f'{self.args.Interface}'+'mon'+" up 192.168.1.1 netmask 255.255.255.0",
