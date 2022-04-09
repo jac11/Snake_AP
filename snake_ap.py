@@ -23,10 +23,11 @@ user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
 
 def Check_Packages(): 
      list_Pakages = [
-                     "  which dnsmasq      > /dev/unll 2>&1 ",
-                     "  which apache2      > /dev/unll 2>&1",
-                     "  which hostapd      > /dev/unll 2>&1",
-                     "  which aircrack-ng  > /dev/unll 2>&1 "
+                     "  which dnsmasq           > /dev/unll 2>&1 ",
+                     "  which apache2           > /dev/unll 2>&1 ",
+                     "  which hostapd           > /dev/unll 2>&1 ",
+                     "  which aircrack-ng       > /dev/unll 2>&1 ",
+                     "  which gnome-terminal    > /dev/unll 2>&1 ",
 
                     ]       
      for package in list_Pakages :
@@ -44,7 +45,9 @@ def Check_Packages():
                          elif "dnsmasq" in package :
                              package = 'dnsmasq'   
                          elif 'aircrack-ng' in package :
-                             package = 'aircrack-ng'              
+                             package = 'aircrack-ng' 
+                         elif "gnome-terminal" in package :
+                             package = 'gnome-terminal'
                          print ("[!] Error Package Not Found " ,package)
                   os.system("sudo killall dnsmasq >/dev/null 2>&1")       
                   exit()   
