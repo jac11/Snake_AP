@@ -94,12 +94,12 @@ class Fake_access_point:
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
           else:
                 pass       
-          self.Clean_IP_Table()
-         
+          self.Clean_IP_Table()         
           self.Create_File_hostapd()     
           self.Create_dns_masq()        
           self.Start_InterFace()
-          self.Create_Fake()
+          self.Create_Fake() 
+          self.Set_IPTable_Config()
           self.call_tremmial()
           
       def Show_ap_all(self):
@@ -193,39 +193,44 @@ class Fake_access_point:
              if self.args.Interface in all_Interface :
                  all_Interface.remove(self.args.Interface)
              count = 0
-             for interface in all_Interface  :
+             for self.interface in all_Interface  :
                  try:   
                     
-                     command = 'ping -I '+f'{interface}'+' -w1 www.google.com  >/dev/null 2>&1 '   
+                     command = 'ping -I '+f'{self.interface}'+' -w1 www.google.com  >/dev/null 2>&1 '   
                      communicate = os.system(command)
                      count +=1
                      if communicate  == 0 :
+                        print("[+] Shaing internet with [" +f'{self.interface}'+" ]")
                         break
                      else:
                          if  communicate == 512 and count == len( all_Interface):
                              print("[+] No Interface have Internet to Share Connection")
                              exit()
                  except Exception  :
-                        continue     
-                          
-             Set_Up_access_point = [
+                        continue   
+          except KeyboardInterrupt:
+                exit()                
+      def Set_IPTable_Config(self):
+              try:                    
+                  Set_Up_access_point = [
 
                                   "ifconfig "+f'{self.args.Interface}'+'mon'+" up 192.168.1.1 netmask 255.255.255.0",
                                   "route add -net 192.168.1.0 netmask 255.255.255.0 gw\
                                    192.168.1.1",
                                   "iptables --flush",
                                   "iptables --table nat --append POSTROUTING\
-                                   --out-interface "+interface+" -j MASQUERADE",
+                                   --out-interface "+ f'{self.interface}'+" -j MASQUERADE",
                                   "iptables --append FORWARD --in-interface "+f'{self.args.Interface}'+"mon\
                                    -j ACCEPT",
                                   "iptables -t nat -A POSTROUTING -j MASQUERADE",
                                   "echo 1 > /proc/sys/net/ipv4/ip_forward",
                                 ]
                                          
-             for _ in Set_Up_access_point :
-                call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)
-          except KeyboardInterrupt:
-                exit()
+                  for _ in Set_Up_access_point :
+                      call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)
+                  
+              except KeyboardInterrupt:
+                     exit()
       def call_tremmial(self):
           try:   
              subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
