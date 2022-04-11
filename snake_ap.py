@@ -200,7 +200,7 @@ class Fake_access_point:
                      communicate = os.system(command)
                      count +=1
                      if communicate  == 0 :
-                        print("[+] Shaing internet with [" +f'{self.interface}'+" ]")
+                        print("[+] Snake_AP Sharing internet with Interface [" +f'{self.interface}'+" ]")
                         break
                      else:
                          if  communicate == 512 and count == len( all_Interface):
