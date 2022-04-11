@@ -12,9 +12,9 @@ class Get_Info :
         self.Get_Password()
      def Get_Password(self):
      
-         print(" "+"-"*55)
-         print("| "+f"{'       EMAIL    ':<25}","| "+f"{'         PASSWORD   ':<25} |")
-         print(" "+"-"*55)
+         print(" "+"-"*79)
+         print("| "+f"{'       EMAIL    ':<35}","  | "+f"{'         PASSWORD   ':<35}   |")
+         print(" "+"-"*79)
          with open(Path_St+'log_error.log') as Log_Handel :
               Log_read = Log_Handel.readlines()
          for line in Log_read :   
@@ -23,7 +23,7 @@ class Get_Info :
                line = str(line[-1]).split('auth_pass=')
                line = str(line).replace('&accept=Login','').replace('%40','@').replace('&',' ')\
                .replace('\\n','').replace("['",'').replace("']",'').replace("'",'').split(',')
-               print("| "+"  "+f"{   line[0]    :<23}","| "+"  "+f"{      line[1]    :<23} |")
+               print("| "+"  "+f"{   line[0]    :<35}","| "+"  "+f"{      line[1]    :<35} |")
 
 if __name__ =='__main__':
    Get_Info()
