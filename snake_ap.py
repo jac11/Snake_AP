@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# sudo apt-get install dbus-x11 
 import re
 import os 
 import sys
