@@ -6,8 +6,9 @@ import os
 import subprocess
 from subprocess import PIPE
 
-Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
-Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
+#Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
+#Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
+Cap_port_Path = '/var/www/Captive_Portal'
 Root_Web      = "DocumentRoot /var/www/html"
 New_Root_Web  = "#DocumentRoot /var/www/html"+'\n'+"        DocumentRoot "+ Cap_port_Path
 Header = "#Snake_web_Portal"+'\n'+' <Directory "'+Cap_port_Path+'">'
