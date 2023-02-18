@@ -4,6 +4,7 @@ import re
 import os 
 import sys
 import time
+import shutil
 import subprocess
 from subprocess import PIPE
 import argparse
@@ -248,6 +249,10 @@ class Fake_access_point:
                   pass 
              if self.args.Portal:
                 from Snake_Package.Captive_Portal import Captive_Portal
+                try:
+                   shutil.copytree(Curent_dir+'/Captive_Portal/', '/var/www/Captive_Portal')
+                except FileExistsError :
+                     time.sleep(.0001)
                 run = Captive_Portal()               
                 subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"],shell=True)
                 subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/read_errorLOG.py"],shell=True)
