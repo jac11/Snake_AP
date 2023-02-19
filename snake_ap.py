@@ -5,11 +5,12 @@ import os
 import sys
 import time
 import shutil
+import argparse
 import subprocess
 from subprocess import PIPE
-import argparse
-from Snake_Package.Deauth_wifi import Deauth_Router
 from Snake_Package.banner import *
+from Snake_Package.Deauth_wifi import Deauth_Router
+
 
 print(Banner2)
 if os.geteuid() != 0 :
@@ -91,7 +92,8 @@ class Fake_access_point:
                  print("[+] Invalid literal for int() with base 16")
                  print("[+] Mac format = xx:xx:xx:xx:xx:xx")
                  exit() 
-             os.system(" sudo iw dev wlan0 interface add wlansnake type station")  #sudo iw dev Sanke1 del 
+             command = "sudo iw " +self.args.Interface+" interface add wlansnake type station 2>dev/null"
+             os.system(command )  #sudo iw dev Sanke1 del 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
           else:
                 pass       
@@ -275,14 +277,14 @@ class Fake_access_point:
             parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
             parser.add_argument( '-CP ',"--Portal", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
             parser.add_argument( '-L ',"--List", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
+            parser.add_argument( '-T ',"--Target" ,action=None ,help = "Mac address of Target to send deauth packet "))
+            parser.add_argument( '-P ',"--Packet" ,action=None ,help = "how may time of Deauth Packet to send  ",type=init)
+            
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
             else:
                  parser.print_help()
-                 exit()                   
-                          
-           
-   
+                 exit()                
 if __name__=='__main__':
      Fake_access_point()
