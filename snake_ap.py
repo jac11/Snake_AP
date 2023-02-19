@@ -277,8 +277,8 @@ class Fake_access_point:
             parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
             parser.add_argument( '-CP ',"--Portal", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
             parser.add_argument( '-L ',"--List", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
-            parser.add_argument( '-T ',"--Target" ,action=None ,help = "Mac address of Target to send deauth packet "))
-            parser.add_argument( '-P ',"--Packet" ,action=None ,help = "how may time of Deauth Packet to send  ",type=init)
+            parser.add_argument( '-T ',"--Target" ,action=None ,help = "Mac address of Target to send deauth packet ")
+            parser.add_argument( '-P ',"--Packet" ,action=None ,help = "how may time of Deauth Packet to send  ",type=int)
             
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
