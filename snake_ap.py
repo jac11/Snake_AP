@@ -92,9 +92,12 @@ class Fake_access_point:
                  print("[+] Invalid literal for int() with base 16")
                  print("[+] Mac format = xx:xx:xx:xx:xx:xx")
                  exit() 
-             command = "sudo iw " +self.args.Interface+" interface add wlansnake type station 2>dev/null"
-             os.system(command )  #sudo iw dev Sanke1 del 
+             command = "sudo iw dev " +self.args.Interface+" interface add wlansnake type station > /dev/null 2>&1"
+             print(command)
+             os.system(command ) #sudo iw dev Sanke1 del 
+
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
+
           else:
                 pass       
           self.Clean_IP_Table()         
@@ -271,14 +274,14 @@ class Fake_access_point:
                  exit()
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
-            parser.add_argument( '-I  ',"--Interface" ,metavar='' , action=None,required = False ,help="Interface act AP 'Support AP Mode'" )                           
-            parser.add_argument( '-S  ',"--Show", action='store_true' ,help="Show all access point around you [bssid-ssid-channel-sagenal]" )
-            parser.add_argument( '-AP ',"--APName" ,metavar='' , action=None ,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
-            parser.add_argument( '-D  ',"--Deauth" ,metavar='' , action=None ,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
-            parser.add_argument( '-CP ',"--Portal", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
-            parser.add_argument( '-L ',"--List", action='store_true'  ,help = "set service wifi login page  [Captive_Portal]")
-            parser.add_argument( '-T ',"--Target" ,action=None ,help = "Mac address of Target to send deauth packet ")
-            parser.add_argument( '-P ',"--Packet" ,action=None ,help = "how may time of Deauth Packet to send  ",type=int)
+            parser.add_argument( '-S ',"--Show",action='store_true',help="Show all access point around you [bssid-ssid-channel-sagenal]" )
+            parser.add_argument( '-I ',"--Interface",action=None,required = False ,help="Interface act AP 'Support AP Mode'" )                          
+            parser.add_argument( '-AP ',"--APName",action=None,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
+            parser.add_argument( '-D ',"--Deauth",action=None,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
+            parser.add_argument( '-CP ',"--Portal",action='store_true',help = "set service wifi login page  [Captive_Portal]")
+            parser.add_argument( '-L ',"--List",action='store_true',help = "Check the AP avelabale")
+            parser.add_argument( '-T ',"--Target",action=None ,help = "Mac address of Target to send deauth packet ")
+            parser.add_argument( '-P ',"--Packet",action=None ,help = "how may time of Deauth Packet to send  ",type=int)
             
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
