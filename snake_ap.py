@@ -93,7 +93,6 @@ class Fake_access_point:
                  print("[+] Mac format = xx:xx:xx:xx:xx:xx")
                  exit() 
              command = "sudo iw dev " +self.args.Interface+" interface add wlansnake type station > /dev/null 2>&1"
-             print(command)
              os.system(command ) #sudo iw dev Sanke1 del 
 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
