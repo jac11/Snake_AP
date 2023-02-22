@@ -7,22 +7,21 @@ import subprocess
 from subprocess import PIPE
 
 #Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
-#Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
+LOG_PATH = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Snake_Package"
 Cap_port_Path = '/var/www/Captive_Portal'
 Root_Web      = "DocumentRoot /var/www/html"
 New_Root_Web  = "#DocumentRoot /var/www/html"+'\n'+"        DocumentRoot "+ Cap_port_Path
 Header = "#Snake_web_Portal"+'\n'+' <Directory "'+Cap_port_Path+'">'
 Header2 = '#<Directory /var/www/>'+'\n'+'<Directory '+Cap_port_Path+'>'
 line_replace = '<Directory /var/www/>'
-log_access , log_error , OInput ,OOutput , LogLevel = "CustomLog "+str(os.path.dirname(__file__))+"/ServerLog/log_access.log",\
-"ErrorLog "+str(os.path.dirname(__file__))+"/ServerLog/log_error.log",\
+log_access , log_error , OInput ,OOutput , LogLevel = "CustomLog "+LOG_PATH+"/ServerLog/log_access.log",\
+"ErrorLog "+LOG_PATH+"/ServerLog/log_error.log",\
 "DumpIOInput on","DumpIOOutput on","LogLevel dumpio:trace7"
 logpatherror , replace_logerror = "ErrorLog ${APACHE_LOG_DIR}/error.log","#ErrorLog ${APACHE_LOG_DIR}/error.log"+'\n'+'        '+log_error
 logpathaceess , replacelogpathaccess = "CustomLog ${APACHE_LOG_DIR}/access.log",'#CustomLog ${APACHE_LOG_DIR}/access.log '+\
 '\n'+'        '+log_access
 endfile = '#Include conf-available/serve-cgi-bin.conf'
 enfreplace = endfile+'\n'+'        '+OInput+'\n'+'        '+OOutput+'\n'+'        '+LogLevel
-
 class Captive_Portal:
       
       def __init__(self):
