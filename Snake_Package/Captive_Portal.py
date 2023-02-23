@@ -6,7 +6,7 @@ import os
 import subprocess
 from subprocess import PIPE
 
-#Cap_port_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Captive_Portal"
+Status_Path = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Snake_Package/log_access.log"
 LOG_PATH = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Snake_Package"
 Cap_port_Path = '/var/www/Captive_Portal'
 Root_Web      = "DocumentRoot /var/www/html"
@@ -67,11 +67,11 @@ class Captive_Portal:
       def Check_Status(self):         
             with open ("/etc/apache2/sites-enabled/000-default.conf",'r') as config_server :
                  read_config = config_server.read()
-            if "#Snake_web_Portal"  in read_config and Cap_port_Path in read_config : 
+            if "#Snake_web_Portal"  in read_config and Status_Path in read_config : 
                      os.system("systemctl restart apache2 >/dev/null 2>&1")
                      print("[+] Captive Portal Server is Up...") 
                      pass
-            elif "#Snake_web_Portal"  in read_config and Cap_port_Path not in  read_config :
+            elif "#Snake_web_Portal"  in read_config and Status_Path not in  read_config :
                 with open(os.path.dirname(__file__)+'/resources/000-default.conf.txt','r') as default_conf_txt :
                           OOO_default_conf_txt = default_conf_txt.read()
                 with open("/etc/apache2/sites-enabled/000-default.conf",'w') as default_conf_read :
@@ -83,7 +83,7 @@ class Captive_Portal:
                 self.Captive_Pr_Set()
               
             else:   
-                if "#Snake_web_Portal" not in read_config and Cap_port_Path not in  read_config  :   
+                if "#Snake_web_Portal" not in read_config and Status_Path not in  read_config  :   
                    os.system("cat /etc/apache2/sites-enabled/000-default.conf > /etc/apache2/sites-enabled/000-default.bac")
                    os.system("cat /etc/apache2/apache2.conf > /etc/apache2/apache2.bac")       
                    self.Captive_Pr_Set()
