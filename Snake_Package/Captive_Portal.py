@@ -28,22 +28,22 @@ class Captive_Portal:
          self.Check_Status()
       def Captive_Pr_Set(self):
                    print("[*] Captive Portal Mode in processing ....Done !!")
-                   with open ("/etc/apache2/sites-enabled/000-default.conf",'r') as FILE_RE :
+                   with open ("/etc/apache2/sites-available/000-default.conf",'r') as FILE_RE :
                         FILE_RE_ACT  = FILE_RE.readlines()
                    for line in FILE_RE_ACT :                               
                             line = line.replace(Root_Web,New_Root_Web)
                             line = line.replace(logpatherror,replace_logerror)
                             line = line.replace(logpathaceess,replacelogpathaccess)
                             line = line.replace(endfile,enfreplace)
-                            with open ("/etc/apache2/sites-enabled/000-default.txt",'a') as write_output:
+                            with open ("/etc/apache2/sites-available/000-default.txt",'a') as write_output:
                                  write_output_F = write_output.write(line) 
                    os.system("sudo a2enmod rewrite >/dev/null 2>&1")
-                   with open ("/etc/apache2/sites-enabled/000-default.txt",'r') as read_output:
+                   with open ("/etc/apache2/sites-available/000-default.txt",'r') as read_output:
                              read_out = read_output.read()                        
                         
                    with open(str(os.path.dirname(__file__))+'/resources/rpache-rewrite.txt','r') as rpacherewrite :
                                   read_cont = rpacherewrite.read()
-                   with open ("/etc/apache2/sites-enabled/000-default.conf",'w') as config_server :
+                   with open ("/etc/apache2/sites-available/000-default.conf",'w') as config_server :
                              wireapacche = config_server.write( read_out+Header+read_cont)
                    with open("/etc/apache2/apache2.conf",'r') as Config_FIE :
                             Read_Config_FILE = Config_FIE.readlines()
@@ -61,11 +61,11 @@ class Captive_Portal:
                    os.system("systemctl restart apache2 >/dev/null 2>&1")
                    command = "sudo a2enmod dumpio >/dev/null 2>&1"
                    subprocess.call(command,shell=True,stderr=subprocess.PIPE)
-                   os.remove("/etc/apache2/sites-enabled/000-default.txt")
+                   os.remove("/etc/apache2/sites-available/000-default.txt")
                    os.remove("/etc/apache2/apache2conf.txt")
                    print("[+] Captive Portal Server is Up...") 
       def Check_Status(self):         
-            with open ("/etc/apache2/sites-enabled/000-default.conf",'r') as config_server :
+            with open ("/etc/apache2/sites-available/000-default.conf",'r') as config_server :
                  read_config = config_server.read()
             if "#Snake_web_Portal"  in read_config and Status_Path in read_config : 
                      os.system("systemctl restart apache2 >/dev/null 2>&1")
@@ -74,7 +74,7 @@ class Captive_Portal:
             elif "#Snake_web_Portal"  in read_config and Status_Path not in  read_config :
                 with open(os.path.dirname(__file__)+'/resources/000-default.conf.txt','r') as default_conf_txt :
                           OOO_default_conf_txt = default_conf_txt.read()
-                with open("/etc/apache2/sites-enabled/000-default.conf",'w') as default_conf_read :
+                with open("/etc/apache2/sites-available/000-default.conf",'w') as default_conf_read :
                           OOO_default_conf_write = default_conf_read.write(OOO_default_conf_txt)
                 with open(str(os.path.dirname(__file__))+'/resources/apache2.conf.txt','r') as apache2_conf :
                           apache2_conf_txt = apache2_conf.read()
@@ -84,7 +84,7 @@ class Captive_Portal:
               
             else:   
                 if "#Snake_web_Portal" not in read_config and Status_Path not in  read_config  :   
-                   os.system("cat /etc/apache2/sites-enabled/000-default.conf > /etc/apache2/sites-enabled/000-default.bac")
+                   os.system("cat /etc/apache2/sites-available/000-default.conf > /etc/apache2/sites-available/000-default.bac")
                    os.system("cat /etc/apache2/apache2.conf > /etc/apache2/apache2.bac")       
                    self.Captive_Pr_Set()
 if __name__=='__main__':

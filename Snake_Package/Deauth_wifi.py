@@ -10,6 +10,11 @@ class Deauth_Router:
 
       def __init__(self):
           self.args_Control()
+          if self.args.dns:
+             from Snake_Package.dns_spoofing import DNS_Spoofing
+             run = DNS_Spoofing()
+          else:
+              pass  
           self.death_wifi()
       def death_wifi(self):    
           Snake_interface  = [
@@ -38,8 +43,7 @@ class Deauth_Router:
             parser.add_argument( '-AP ',"--APName")
             parser.add_argument( '-T ',"--Target") 
             parser.add_argument( '-P ',"--Packet")
-            
-            
+            parser.add_argument( '--dns',action='store_true')
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
