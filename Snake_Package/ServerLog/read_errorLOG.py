@@ -4,8 +4,17 @@ import sys
 import time
 import os
 import re
-Path_St = "/".join(os.path.abspath(__file__).split('/'))[:-16]
+import argparse
 
+Path_St = "/".join(os.path.abspath(__file__).split('/'))[:-16]
+parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
+parser.add_argument( '-CP ',"--Portal",action='store_true')
+parser.add_argument( '--dns',action='store_true' )         
+args = parser.parse_args()
+if len(sys.argv)> 1 :
+        pass
+else:
+    parser.print_help()
 
 class Get_Info :
     
@@ -27,7 +36,8 @@ class Get_Info :
                print("| "+"  "+f"{   line[0]    :<35}","| "+"  "+f"{      line[1]    :<35} |")
 
 if __name__ =='__main__':
-   Get_Info()
+  if args.Portal:
+     Get_Info()
 
 class dns_result :
       
@@ -83,4 +93,6 @@ class dns_result :
 
    
 if __name__ =='__main__':
-   dns_result()   
+  if args.dns:
+     dns_result()  
+
