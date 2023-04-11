@@ -8,8 +8,23 @@ import sys
 import shutil
 import time
 from zipfile import ZipFile
+
 Curent_dir2  ="".join(os.path.dirname(__file__)).replace("Snake_Package",'')
 LOG_PATH = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Snake_Package"
+user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
+def Set_Log():             
+    subprocess.call(["chmod +x "+Curent_dir2+"Snake_Package/ServerLog/SERVER_DNS_STREAM.py"],shell=True)
+    subprocess.call(["chmod +x "+Curent_dir2+"Snake_Package/ServerLog/DNS_SPOOFING_LOG.py"],shell=True)
+    command_run = Curent_dir2+"Snake_Package/ServerLog/SERVER_DNS_STREAM.py"
+    command_proc3 = ' gnome-terminal  -e ' +'"' + command_run +'"'               
+    call_termminal = subprocess.call(command_proc3,shell=True,stderr=subprocess.PIPE)
+    if os.path.exists(Curent_dir2+"Snake_Package/ServerLog/LOGIN_DB.txt") :
+       group  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir2+"Snake_Package/ServerLog/LOGIN_DB.txt" 
+       os.system(group)
+    with open(Curent_dir2+'/WEB_AUTH_db.txt','a') as DB_PASS :
+        group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir2+"WEB_AUTH_db.txt" 
+        os.system(group1)       
+      
 class DNS_Spoofing:
 
         def __init__(self):
@@ -100,11 +115,11 @@ class DNS_Spoofing:
                    hosts.write('172.160.255.49  www.'+host+'.com     '+host+'.com'+'\n')       
         def unzip_web(self):
             if os.path.exists(Curent_dir2+'Snake_Package/sites'):
-                pass
+               Set_Log()
             else:     
                 with ZipFile(LOG_PATH+'/resources/sites.zip','r') as unzipweb :
                     unzipweb.extractall(path=Curent_dir2+'Snake_Package/')
-                        
+                Set_Log()            
         def parse_args(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
             parser.add_argument( '-S ',"--Show",action='store_true')
