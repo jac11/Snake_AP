@@ -244,6 +244,18 @@ class Fake_access_point:
               except KeyboardInterrupt:
                      exit()
       def call_tremmial(self):
+          def Set_Log():             
+              subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"],shell=True)
+              subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/read_errorLOG.py"],shell=True)
+              command_run = Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"
+              command_proc3 = ' gnome-terminal  -e ' +'"' + command_run +'"'               
+              call_termminal = subprocess.call(command_proc3,shell=True,stderr=subprocess.PIPE)
+              if os.path.exists(Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt") :
+                  group  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt" 
+                  os.system(group)
+              with open(Curent_dir+'/Email_Password.db','a') as DB_PASS :
+                    group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Email_Password.db" 
+                    os.system(group1)
           try:   
              subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
              order = Curent_dir+"/Snake_Package/Host_apd.py"             
@@ -267,18 +279,8 @@ class Fake_access_point:
                    shutil.copytree(Curent_dir+'/Captive_Portal/', '/var/www/Captive_Portal')
                 except FileExistsError :
                      time.sleep(.0001)
-                run = Captive_Portal()               
-                subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"],shell=True)
-                subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/read_errorLOG.py"],shell=True)
-                command_run = Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"
-                command_proc3 = ' gnome-terminal  -e ' +'"' + command_run +'"'               
-                call_termminal = subprocess.call(command_proc3,shell=True,stderr=subprocess.PIPE)
-                if os.path.exists(Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt") :
-                   group  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt" 
-                   os.system(group)
-                with open(Curent_dir+'/Email_Password.db','a') as DB_PASS :
-                   group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Email_Password.db" 
-                   os.system(group1)
+                run = Captive_Portal()  
+                Set_Log()
           except KeyboardInterrupt :
                   Command  = [
                                "sudo airmon-ng stop wlan0mon",
