@@ -30,7 +30,7 @@ class DNS_Spoofing:
         def __init__(self):
             self.parse_args()
             self.unzip_web()
-           # self.write_hosts()
+         #   self.write_hosts()
             self.VirtualHost_files()       
             self.DNS_COPY_WEB()
         def DNS_COPY_WEB(self):
@@ -83,6 +83,8 @@ class DNS_Spoofing:
                                 "\tCustomLog "+LOG_PATH+'/ServerLog/log_access.log combined'+'\n'\
                                 "\t<IfModule mod_headers.c>"+'\n'\
                                 """\t\tHeader set Strict-Transport-Security "max-age=0; includeSubDomains; preload" env=HTTPS"""+'\n'\
+                                "\t\tHeader unset Cookie"+'\n'\
+                                "\t\tHeader unset Set-Cookie"+'\n'\
                                 "\t</IfModule>"+'\n'\
                                 "\t<IfModule dir_module>"+'\n'\
                                 "\t\tDirectoryIndex index.html"+'\n'\
