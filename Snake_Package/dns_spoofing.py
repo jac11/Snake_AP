@@ -30,7 +30,7 @@ class DNS_Spoofing:
         def __init__(self):
             self.parse_args()
             self.unzip_web()
-            self.write_hosts()
+           # self.write_hosts()
             self.VirtualHost_files()       
             self.DNS_COPY_WEB()
         def DNS_COPY_WEB(self):
