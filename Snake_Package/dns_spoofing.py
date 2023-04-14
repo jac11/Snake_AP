@@ -16,7 +16,7 @@ def Set_Log():
     subprocess.call(["chmod +x "+Curent_dir2+"Snake_Package/ServerLog/SERVER_DNS_STREAM.py"],shell=True)
     subprocess.call(["chmod +x "+Curent_dir2+"Snake_Package/ServerLog/DNS_SPOOFING_LOG.py"],shell=True)
     command_run = Curent_dir2+"Snake_Package/ServerLog/SERVER_DNS_STREAM.py"
-    command_proc3 = ' gnome-terminal  -e ' +'"' + command_run +'"'               
+    command_proc3 = ' gnome-terminal --geometry 110x30+40+40  -e ' +'"' + command_run +'"'               
     call_termminal = subprocess.call(command_proc3,shell=True,stderr=subprocess.PIPE)
     if os.path.exists(Curent_dir2+"Snake_Package/ServerLog/LOGIN_DB.txt") :
        group  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir2+"Snake_Package/ServerLog/LOGIN_DB.txt" 

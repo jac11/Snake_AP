@@ -34,7 +34,7 @@ class Deauth_Router:
                  command = "sudo aireplay-ng --deauth 0  -a "+f'{self.args.Deauth} '+" wlansnake"
               else:
                   command = "sudo aireplay-ng --deauth " +f'{self.args.Packet}' +" -a "+f'{self.args.Deauth} '+" wlansnake"
-          command_proc = ' gnome-terminal  -e ' +'"' +  command   +" --ignore-negative-one"+'"'                  
+          command_proc = ' gnome-terminal --geometry 110x30+40+40  -e ' +'"' +  command   +" --ignore-negative-one"+'"'                  
           call_termminal = subprocess.call(command_proc,shell=True,stderr=subprocess.PIPE)                            
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
