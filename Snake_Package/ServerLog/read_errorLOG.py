@@ -7,6 +7,7 @@ import re
 import argparse
 
 
+Path_St = "/".join(os.path.abspath(__file__).split('/'))[:-16]
 
 class Get_Info :
     
