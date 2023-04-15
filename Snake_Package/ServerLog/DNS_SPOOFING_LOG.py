@@ -75,7 +75,7 @@ class dns_result :
           try:     
             for i in range(len(WebVisit)):       
                 print("| "+"  "+f"{ WebVisit[count]:<20}"+"|  "
-                +f"{  Cread_auth[count1]   :<35}","| "+"  "+f"{     Cread_auth[count1+1]  :<35} |")  
+                +f"{  Cread_auth[count1]   :<35}"," | "+"  "+f"{     Cread_auth[count1+1]  :<35} |")  
                 count  +=1
                 count1 +=2
           except IndexError:
