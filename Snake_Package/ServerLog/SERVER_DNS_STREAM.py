@@ -24,7 +24,7 @@ if os.path.exists(Path_St+'SERVLOGIN_DB.txt'):
               write_data = DB_PASS.write(str("".join(read_data[3:])))
 else:     
      with open(Path_DB_PASS+'/WEB_AUTH_db.txt','w') as DB_PASS :        
-          write_data = DB_PASS.write(" "+"-"*101+'\n'+"| "+f"{'       Site-Name    ':<20}"+"  | "+f"{'       EMAIL    ':<34}"+" | "+f"{'         PASSWORD   ':<37} |"+"\n"+" "+"-"*101+'\n')
+          write_data = DB_PASS.write(" "+"-"*101+'\n'+"| "+f"{'       Site-Name    ':<20}"+"  | "+f"{'       EMAIL    ':<35}"+" | "+f"{'         PASSWORD   ':<37} |"+"\n"+" "+"-"*101+'\n')
 with open (Path_St+'SERVLOGIN_DB.txt','w')as reas_DB:
      with open(Path_St+'log_error.log','w') as Log_Handel :
           with open(Path_St+'log_access.log','w') as Log_Handel :
