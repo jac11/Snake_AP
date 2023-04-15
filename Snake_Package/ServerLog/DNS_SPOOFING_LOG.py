@@ -26,8 +26,8 @@ class dns_result :
               Log_read = Log_Handel.readlines()
           for line in Log_read:     
               if '%40'in  line  : 
-                if "username" in line  or "key" in line:
-                   line = line.split('=')                  
+                if "username" in line  or "key1" in line:
+                   line = line.split('=')                
                 else:
                      line  = line.split('&')  
                 line_split = str(line[1:3]).split('+&password')
@@ -75,7 +75,7 @@ class dns_result :
           try:     
             for i in range(len(WebVisit)):       
                 print("| "+"  "+f"{ WebVisit[count]:<20}"+"|  "
-                +f"{  Cread_auth[count1]   :<35}"," | "+"  "+f"{     Cread_auth[count1+1]  :<35} |")  
+                +f"{  Cread_auth[count1]   :<35}","| "+"  "+f"{     Cread_auth[count1+1]  :<34}  |")  
                 count  +=1
                 count1 +=2
           except IndexError:
