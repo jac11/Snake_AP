@@ -43,8 +43,12 @@ class dns_result :
                     .replace('&isJsEnabled','').replace("&session_key=",'').replace('&session_password=1','')\
                     .replace("+&session_password",'').replace("session_password=",'').replace(",",'').strip()  
                     with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
-
-                        Cread_User.write(line_cread_1.replace("%40",'@')+'\n'+line_cread_2.replace("%40",'@')+'\n')
+                        if line_cread_1 == "":
+                              Cread_User.write("---------"+'\n'+line_cread_2.replace("%40",'@')+'\n')
+                        elif line_cread_2 == "": 
+                              Cread_User.write(line_cread_1.replace("%40",'@')+'\n'+"------"+'\n')   
+                        else:
+                              Cread_User.write(line_cread_1.replace("%40",'@')+'\n'+line_cread_2.replace("%40",'@')+'\n')
                 except IndexError:
                        pass          
                 with open(Path_St+'/ServerLog/log_access.log','r') as accesslog:
