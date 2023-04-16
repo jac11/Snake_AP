@@ -248,7 +248,7 @@ class Fake_access_point:
               subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"],shell=True)
               subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/read_errorLOG.py"],shell=True)
               command_run = Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"
-              command_proc3 = ' gnome-terminal --geometry 110x30+40+40  -e ' +'"' + command_run +'"'               
+              command_proc3 = ' gnome-terminal --geometry 110x30+1000+60  -e ' +'"' + command_run +'"'               
               call_termminal = subprocess.call(command_proc3,shell=True,stderr=subprocess.PIPE)
               if os.path.exists(Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt") :
                   group  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Snake_Package/ServerLog/LOGIN_DB.txt" 
@@ -259,11 +259,11 @@ class Fake_access_point:
           try:   
               subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
               order = Curent_dir+"/Snake_Package/Host_apd.py"             
-              command_proc = ' gnome-terminal --geometry 95x30+40+40  -e ' +'"' + order  +'"'                  
+              command_proc = ' gnome-terminal --geometry 95x30+100+10 -e ' +'"' + order  +'"'                  
               call_termminal = subprocess.call(command_proc,shell=True,stderr=subprocess.PIPE)              
      
               order2 = "dnsmasq -C dnsmasq.conf -d"
-              command_proc2 = ' gnome-terminal --geometry 95x30+40+40  -e ' +'"' + order2 +'"'         
+              command_proc2 = ' gnome-terminal --geometry 95x30+100+5000  -e ' +'"' + order2 +'"'         
               call_termminal = subprocess.call(command_proc2,shell=True,stderr=subprocess.PIPE)
               if self.args.dns and not self.args.Deauth\
               and  not self.args.Portal :
