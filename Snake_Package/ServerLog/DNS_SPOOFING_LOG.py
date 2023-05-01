@@ -25,6 +25,7 @@ class dns_result :
                    pass
           with open(Path_St+'/ServerLog/log_error.log') as Log_Handel :
               Log_read = Log_Handel.readlines()
+
           for line in Log_read:     
               if '%40'in  line :
                 try: 
@@ -110,7 +111,9 @@ class dns_result :
                          else:
                               Cread_User.write(line_cread_1+'\n'+line_cread_2+'\n')
                 except IndexError:
-                       pass          
+                       pass  
+                except UnboundLocalError :
+                       pass               
                 with open(Path_St+'/ServerLog/log_access.log','r') as accesslog:
                         accesslog = accesslog.readlines()#[-243:]
                 for line1 in accesslog:    
