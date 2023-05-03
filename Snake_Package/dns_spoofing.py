@@ -53,9 +53,13 @@ class DNS_Spoofing:
                 command = "sudo a2enmod dumpio >/dev/null 2>&1"
                 subprocess.call(command,shell=True,stderr=subprocess.PIPE)    
                 with open("/etc/apache2/ports.conf" ,'r') as portset :
-                     port = portset.read().replace("Listen 80","Listen 80"+"\n"+"Listen 172.160.255.49:80"+'\n')   
-                with open ("/etc/apache2/ports.conf" ,'w') as portset :  
-                    portset.write(port)   
+                     port = portset.read()
+                     if " 172.160.255.49:80" in port :
+                         pass
+                     else:    
+                         port = portset.read().replace("Listen 80","Listen 80"+"\n"+"Listen 172.160.255.49:80"+'\n')   
+                         with open ("/etc/apache2/ports.conf" ,'w') as portset :  
+                              portset.write(port)   
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
                 os.system("sudo a2dissite 000-default.conf >/dev/null 2>&1")
                 os.system("systemctl restart apache2 >/dev/null 2>&1")
