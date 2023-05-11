@@ -56,9 +56,9 @@ class DNS_Spoofing:
                      port = portset.read()
                      if "172.160.255.49:80" in port :
                          pass
-                     else:    
-                         with open("/etc/apache2/ports.conf" ,'r') as portset :
-                             port = portset.read().replace("Listen 80","Listen 80"+"\n"+"Listen 172.160.255.49:80"+'\n') 
+                     else:  
+                         with open(LOG_PATH+'/resources/ports_dns.txt' ,'r') as portset :  
+                             port = portset.read()
                          with open ("/etc/apache2/ports.conf" ,'w') as portset :  
                               portset.write(port)   
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
