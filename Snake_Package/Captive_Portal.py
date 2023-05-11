@@ -75,8 +75,8 @@ class Captive_Portal:
                      if "172.170.250.49:80" in port :
                          pass
                      else:    
-                         with open("/etc/apache2/ports.conf" ,'r') as portset :
-                             port = portset.read().replace("Listen 80","Listen 80"+"\n"+"Listen 172.170.250.49:80"+'\n') 
+                         with open(str(os.path.dirname(__file__))+'/resources/ports_Cp.txt','r') as portset :
+                             port = portset.read() 
                          with open ("/etc/apache2/ports.conf" ,'w') as portset :  
                               portset.write(port) 
                    os.system("systemctl restart apache2 >/dev/null 2>&1")  
