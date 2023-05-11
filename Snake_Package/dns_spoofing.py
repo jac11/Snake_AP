@@ -54,10 +54,11 @@ class DNS_Spoofing:
                 subprocess.call(command,shell=True,stderr=subprocess.PIPE)    
                 with open("/etc/apache2/ports.conf" ,'r') as portset :
                      port = portset.read()
-                     if " 172.160.255.49:80" in port :
+                     if "172.160.255.49:80" in port :
                          pass
                      else:    
-                         port = portset.read().replace("Listen 80","Listen 80"+"\n"+"Listen 172.160.255.49:80"+'\n')   
+                         with open("/etc/apache2/ports.conf" ,'r') as portset :
+                             port = portset.read().replace("Listen 80","Listen 80"+"\n"+"Listen 172.160.255.49:80"+'\n') 
                          with open ("/etc/apache2/ports.conf" ,'w') as portset :  
                               portset.write(port)   
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
@@ -81,7 +82,7 @@ class DNS_Spoofing:
             for file in os.listdir(LOG_PATH+"/sites"):
                 with  open(LOG_PATH+'/VirtualHostFile/'+file+".conf",'w')as config :
                         config = config.write(
-                                "<VirtualHost *:80>"+"\n"\
+                                "<VirtualHost 172.160.255.49:80>"+"\n"\
                                 "\tServerAdmin   "+f'{file}'+'@'+ f'{file}'+".com"+'\n'\
                                 '\t'+"ServerName   "+f'{file}'+".com"+'\n'\
                                 "\t"+"ServerAlias  www."+f'{file}'+".com"+'\n'\
