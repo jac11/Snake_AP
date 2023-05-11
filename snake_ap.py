@@ -172,8 +172,8 @@ class Fake_access_point:
       def Create_dns_masq(self):
           try:
               with open("./dnsmasq.conf",'w') as dnsmasq:
-                    
-                   dnsmasq.write(
+                  if self.args.dns and not self.args.Portal :                    
+                      dnsmasq.write(
                                    'no-resolv'+'\n'\
                                    'interface='+f'{self.args.Interface}'+'mon'+'\n'\
                                    "dhcp-range=172.160.255.50,172.160.255.62,255.255.255.240, 12h"+'\n'\
@@ -185,9 +185,33 @@ class Fake_access_point:
                                    "bogus-priv"+'\n'\
                                    "listen-address= 127.0.0.1"+'\n'
                                 )  
-              if self.args.Portal:
-                      with open("./dnsmasq.conf",'a') as dnsmasq :
-                                      dnsmasq.write("address=/#/172.160.255.49"+"\n")   
+                  elif self.args.Portal and not self.args.dns:
+                      dnsmasq.write(
+                                   'no-resolv'+'\n'\
+                                   'interface='+f'{self.args.Interface}'+'mon'+'\n'\
+                                   "dhcp-range=172.170.250.50,172.170.250.62,255.255.255.240, 12h"+'\n'\
+                                   "dhcp-option=3,172.170.250.49"+'\n'\
+                                   "dhcp-option=6,172.170.250.49"+'\n'\
+                                   "server=208.67.220.220"+'\n'\
+                                   "log-queries"+'\n'\
+                                   "log-dhcp"+"\n"\
+                                   "bogus-priv"+'\n'\
+                                   "listen-address= 127.0.0.1"+'\n'
+                                   "address=/#/172.170.250.49"+"\n"  
+                                   ) 
+                  else:
+                      dnsmasq.write(
+                                   'no-hosts'+'\n'\
+                                   'interface='+f'{self.args.Interface}'+'mon'+'\n'\
+                                   "dhcp-range=172.100.240.50,172.100.240.62,255.255.255.240, 12h"+'\n'\
+                                   "dhcp-option=3,172.100.240.49"+'\n'\
+                                   "dhcp-option=6,172.100.240.49"+'\n'\
+                                   "server=208.67.220.220"+'\n'\
+                                   "log-queries"+'\n'\
+                                   "log-dhcp"+"\n"\
+                                   "bogus-priv"+'\n'\
+                                   "listen-address= 127.0.0.1"+'\n'
+                                  )     
               if self.args.dns:
                     add_hosts= "no-resolv"+'\n'+'no-hosts'+'\n'+"addn-hosts="+Curent_dir+"/Snake_Package/resources/hosts.txt"+'\n'+"address=/loc/172.160.255.49"
                     with open ("./dnsmasq.conf",'r') as read_config:
@@ -223,9 +247,10 @@ class Fake_access_point:
           except KeyboardInterrupt:
                 exit()                
       def Set_IPTable_Config(self):
-              try:                    
-                  Set_Up_access_point = [
-
+              try: 
+                  if self.args.dns:                   
+                      Set_Up_access_point = [
+                                  
                                   "ifconfig "+f'{self.args.Interface}'+'mon'+" up 172.160.255.49 netmask 255.255.255.240",
                                   "route add -net 172.160.255.48 netmask 255.255.255.240 gw\
                                   172.160.255.49",
@@ -237,7 +262,34 @@ class Fake_access_point:
                                   "iptables -t nat -A POSTROUTING -j MASQUERADE",
                                   "echo 1 > /proc/sys/net/ipv4/ip_forward",
                                 ]
-                                         
+                  elif self.args.Portal:
+                      Set_Up_access_point = [
+                                  
+                                  "ifconfig "+f'{self.args.Interface}'+'mon'+" up 172.170.250.49 netmask 255.255.255.240",
+                                  "route add -net 172.170.250.48 netmask 255.255.255.240 gw\
+                                  172.170.250.49",
+                                  "iptables --flush",
+                                  "iptables --table nat --append POSTROUTING\
+                                   --out-interface "+ f'{self.interface}'+" -j MASQUERADE",
+                                  "iptables --append FORWARD --in-interface "+f'{self.args.Interface}'+"mon\
+                                   -j ACCEPT",
+                                  "iptables -t nat -A POSTROUTING -j MASQUERADE",
+                                  "echo 1 > /proc/sys/net/ipv4/ip_forward",
+                                ]  
+                  else:
+                      Set_Up_access_point = [
+                                  
+                                  "ifconfig "+f'{self.args.Interface}'+'mon'+" up 172.100.240.49 netmask 255.255.255.240",
+                                  "route add -net 172.100.240.48 netmask 255.255.255.240 gw\
+                                  172.100.240.49",
+                                  "iptables --flush",
+                                  "iptables --table nat --append POSTROUTING\
+                                   --out-interface "+ f'{self.interface}'+" -j MASQUERADE",
+                                  "iptables --append FORWARD --in-interface "+f'{self.args.Interface}'+"mon\
+                                   -j ACCEPT",
+                                  "iptables -t nat -A POSTROUTING -j MASQUERADE",
+                                  "echo 1 > /proc/sys/net/ipv4/ip_forward",  
+                                ]                         
                   for _ in Set_Up_access_point :
                       call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)
                   
