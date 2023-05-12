@@ -294,7 +294,7 @@ class Fake_access_point:
                       call_termminal = subprocess.call( _ ,shell=True,stderr=subprocess.PIPE,stdout=PIPE)
                   with open(Curent_dir+"/Snake_Package/resources/port_def.txt",'r') as port:
                        port_80 = port.read()
-                  with open("/etc/apache2/poerts.conf",'w') as portset:
+                  with open("/etc/apache2/ports.conf",'w') as portset:
                        portset.write(port_80)     
               except KeyboardInterrupt:
                      exit()
