@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Captive Portal</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('2096559-1665343575.jpg'); /* Replace with your image URL */
+            background-size: cover; /* Ensures the image covers the entire background */
+            background-position: center; /* Centers the image */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+        }
+
+        .portal-container {
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%; /* Responsive width */
+            max-width: 400px; /* Maximum width for larger screens */
+            text-align: center;
+        }
+
+        .portal-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 24px; /* Larger font size for headings */
+        }
+
+        .portal-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px; /* Larger font size for better readability */
+        }
+
+        .portal-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px 0; /* Add spacing between buttons */
+        }
+
+        .portal-container button.google-login {
+            background-color: #000000; /* Google blue */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .portal-container button.google-login img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .portal-container button:hover {
+            opacity: 0.9; /* Slight fade on hover */
+        }
+
+        .portal-container p {
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px; /* Smaller font size for additional text */
+        }
+
+        .portal-container a {
+            color: #28a745;
+            text-decoration: none;
+        }
+
+        .portal-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 600px) {
+            .portal-container {
+                padding: 15px; /* Smaller padding for smaller screens */
+            }
+
+            .portal-container h2 {
+                font-size: 20px; /* Smaller font size for headings */
+            }
+
+            .portal-container input {
+                font-size: 14px; /* Smaller font size for inputs */
+            }
+
+            .portal-container button {
+                font-size: 14px; /* Smaller font size for buttons */
+            }
+
+            .portal-container p {
+                font-size: 12px; /* Smaller font size for additional text */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <h2>WiFi Login</h2>
+        <p>Please log in to access the internet.</p>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p>Or</p>
+        <button class="google-login" onclick="handleGoogleLogin()">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+            Login with Google
+        </button>
+        <p>By logging in, you agree to our <a href="#">Terms of Service</a>.</p>
+    </div>
+
+    <script>
+        // JavaScript to handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Get input values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate authentication (replace with actual backend logic)
+            if (username === 'user' && password === 'password') {
+                alert('Login successful! Redirecting...');
+                // Redirect to a success page or grant internet access
+                window.location.href = 'https://example.com/success';
+            } else {
+                alert('Invalid username or password. Please try again.');
+            }
+        });
+
+        // Function to handle Google login
+        function handleGoogleLogin() {
+            // Redirect to Google OAuth endpoint (replace with your client ID and redirect URI)
+            const clientId = 'YOUR_GOOGLE_CLIENT_ID';
+            const redirectUri = encodeURIComponent('Create your Google Account.html');
+            const scope = encodeURIComponent('profile email');
+            const authUrl = `Create your Google Account.html`;
+            window.location.href = authUrl;
+        }
+    </script>
+</body>
+</html>
