@@ -26,7 +26,16 @@ enfreplace = endfile+'\n'+'        '+OInput+'\n'+'        '+OOutput+'\n'+'      
 with open ("/etc/apache2/sites-available/000-Porat.conf",'w') as conf_do:
     pass
 class Captive_Portal:
-      
+      if os.path.exists('/etc/apache2/apache2.conf.bck'):
+        pass
+      else:  
+          with open('/etc/apache2/apache2.conf' ,'r') as copydefulit , \
+          open('/etc/apache2/apache2.conf.bck','w') as writecopy:
+                writecopy.write(copydefulit.read())
+          with open (str(os.path.dirname(__file__))+'/resources/apache2_Captive_Portal.txt','r') as addConfig:
+               addConfig = addConfig.read()
+          with open('/etc/apache2/apache2.conf' ,'w') as CaptivePortalConfig:
+              CaptivePortalConfig = CaptivePortalConfig.write(addConfig)     
       def __init__(self):
          self.Check_Status()
       def Captive_Pr_Set(self):
