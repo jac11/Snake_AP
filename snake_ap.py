@@ -232,7 +232,7 @@ class Fake_access_point:
              for self.interface in all_Interface  :
                  try:   
                     
-                     command = 'ping -I '+f'{self.interface}'+' -w1 www.google.com  >/dev/null 2>&1 '   
+                     command = 'ping -I '+f'{self.interface}'+' -w1 www.google.com  >/dev/null 2>&1 '  
                      communicate = os.system(command)
                      count +=1
                      if communicate  == 0 :
@@ -250,7 +250,8 @@ class Fake_access_point:
               try: 
                   if self.args.dns:                   
                       Set_Up_access_point = [
-                                  
+                                  "iptables -t nat -F",
+                                  "iptables -t nat -X",
                                   "ifconfig "+f'{self.args.Interface}'+'mon'+" up 172.160.255.49 netmask 255.255.255.240",
                                   "route add -net 172.160.255.48 netmask 255.255.255.240 gw\
                                   172.160.255.49",
@@ -264,7 +265,8 @@ class Fake_access_point:
                                 ]
                   elif self.args.Portal:
                       Set_Up_access_point = [
-                                  
+                                  "iptables -t nat -F",
+                                  "iptables -t nat -X",
                                   "ifconfig "+f'{self.args.Interface}'+'mon'+" up 172.170.250.49 netmask 255.255.255.240",
                                   "route add -net 172.170.250.48 netmask 255.255.255.240 gw\
                                   172.170.250.49",
@@ -278,7 +280,8 @@ class Fake_access_point:
                                 ]  
                   else:
                       Set_Up_access_point = [
-                                  
+                                  "iptables -t nat -F",
+                                  "iptables -t nat -X",
                                   "ifconfig "+f'{self.args.Interface}'+'mon'+" up 172.100.240.49 netmask 255.255.255.240",
                                   "route add -net 172.100.240.48 netmask 255.255.255.240 gw\
                                   172.100.240.49",
@@ -376,4 +379,14 @@ class Fake_access_point:
                  parser.print_help()
                  exit()                
 if __name__=='__main__':
-     Fake_access_point()
+    if os.path.exists('/etc/apache2/apache2.conf.bck'):
+        pass
+    else:  
+        with open('/etc/apache2/apache2.conf' ,'r') as copydefulit , \
+        open('/etc/apache2/apache2.conf.bck','w') as writecopy:
+            writecopy.write(copydefulit.read())
+        with open (str(os.path.dirname(__file__))+'/Snake_Package/resources/apache2_Captive_Portal.txt','r') as addConfig:
+            addConfig = addConfig.read()
+        with open('/etc/apache2/apache2.conf' ,'w') as CaptivePortalConfig:
+            CaptivePortalConfig = CaptivePortalConfig.write(addConfig)
+    Fake_access_point()
