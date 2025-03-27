@@ -32,7 +32,7 @@ class Captive_Portal:
           with open('/etc/apache2/apache2.conf' ,'r') as copydefulit , \
           open('/etc/apache2/apache2.conf.bck','w') as writecopy:
                 writecopy.write(copydefulit.read())
-          with open (str(os.path.dirname(__file__))+'/resources/apache2_Captive_Portal.txt','r') as addConfig:
+          with open (str(os.path.dirname(__file__))+'/resources/apache2.conf.txt','r') as addConfig:
                addConfig = addConfig.read()
           with open('/etc/apache2/apache2.conf' ,'w') as CaptivePortalConfig:
               CaptivePortalConfig = CaptivePortalConfig.write(addConfig)     
