@@ -3,7 +3,7 @@
 Banner = """
         __
        {0O}
-       \__/
+       \\__/
        /^/  SNAKE ACCESS POINT START
       / /____  TO exit  CTRL+C   
      (_______) BY : JACSTROY
@@ -15,11 +15,11 @@ Banner = """
 Banner2 = """
       _    _
    ,-(|)--(|)-.
-   \_   ..   _/
-     \______/
+   \\_   ..   _/
+     \\______/
        V  V   SNAKE_AP 
        `.^^`. BY:JACSTORY                     
-         \^^^\                            
+         \\^^^\\                            
          |^^^|                  
    """
 
