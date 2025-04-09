@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Access Agreement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .warning-box {
+            border-left: 5px solid #ff9800;
+            background-color: #fff8e1;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .accept-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Our WiFi Network</h1>
+    
+    <div class="warning-box">
+        <h2>Important Notice</h2>
+        <p>By using this network, you agree to our terms of service.</p>
+        <p>All network activity is logged for security purposes.</p>
+    </div>
+    
+    <button class="accept-btn" onclick="acceptTerms()">I Accept</button>
+
+    <script>
+        function acceptTerms() {
+            // Set acceptance cookie (expires in 1 day)
+            document.cookie = "wifi_accepted=true; max-age=86400; path=/";
+            
+            // Redirect to original requested URL or default page
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect') || 'http://www.google.com';
+            window.location.href = redirectUrl;
+        }
+    </script>
+</body>
+</html>

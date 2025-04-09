@@ -1,38 +1,39 @@
-172.160.255.49     www.steam.com               steam.com
-172.160.255.49     www.amazon.com              amazon.com
-172.160.255.49     www.linkedin.com            linkedin.com
-172.160.255.49     www.paypal.com              paypal.com
-172.160.255.49     www.facebook.com            facebook.com
-172.160.255.49     www.create.com              create.com
-172.160.255.49     www.apple.com               apple.com
-172.160.255.49     www.microsoft.com           microsoft.com
-172.160.255.49     www.verizon.com             verizon.com
-172.160.255.49     www.dropbox.com             dropbox.com
-172.160.255.49     www.yandex.com              yandex.com
-172.160.255.49     www.gitlab.com              gitlab.com
-172.160.255.49     www.google.com              google.com
-172.160.255.49     www.badoo.com               badoo.com
-172.160.255.49     www.pinterest.com           pinterest.com
-172.160.255.49     www.netflix.com             netflix.com
-172.160.255.49     www.wifi.com                wifi.com
-172.160.255.49     www.protonmail.com          protonmail.com
-172.160.255.49     www.myspace.com             myspace.com
-172.160.255.49     www.instafollowers.com     instafollowers.com
-172.160.255.49     www.spotify.com            spotify.com
-172.160.255.49     www.twitch.com             twitch.com
-172.160.255.49     www.instagram.com          instagram.com
-172.160.255.49     www.devianart.com          devianart.com
-172.160.255.49     www.wordpress.com          wordpress.com
-172.160.255.49     www.vk.com                 vk.com
-172.160.255.49     www.bitcoin.com            bitcoin.com
-172.160.255.49     www.playstation.com        playstation.com
-172.160.255.49     www.yahoo.com              yahoo.com
-172.160.255.49     www.icloud.com             icloud.com
-172.160.255.49     www.messenger.com          messenger.com
-172.160.255.49     www.github.com             github.com
-172.160.255.49     www.adobe.com              adobe.com
-172.160.255.49     www.origin.com             origin.com
-172.160.255.49     www.shopify.com            shopify.com
-172.160.255.49     www.twitter.com            twitter.com
-172.160.255.49     www.shopping.com           shopping.com
-172.160.255.49     www.snapchat.com           snapchat.com
+172.160.255.49      www.shopify.local        shopify.local         www.shopify.wifi         shopify.wifi             shopify.com              www.shopify.com          
+172.160.255.49      www.instagram.local      instagram.local       www.instagram.wifi       instagram.wifi           instagram.com            www.instagram.com        
+172.160.255.49      www.yahoo.local          yahoo.local           www.yahoo.wifi           yahoo.wifi               yahoo.com                www.yahoo.com            
+172.160.255.49      www.bitcoin.local        bitcoin.local         www.bitcoin.wifi         bitcoin.wifi             bitcoin.com              www.bitcoin.com          
+172.160.255.49      www.protonmail.local     protonmail.local      www.protonmail.wifi      protonmail.wifi          protonmail.com           www.protonmail.com       
+172.160.255.49      www.origin.local         origin.local          www.origin.wifi          origin.wifi              origin.com               www.origin.com           
+172.160.255.49      www.vk.local             vk.local              www.vk.wifi              vk.wifi                  vk.com                   www.vk.com               
+172.160.255.49      www.badoo.local          badoo.local           www.badoo.wifi           badoo.wifi               badoo.com                www.badoo.com            
+172.160.255.49      www.wifi.local           wifi.local            www.wifi.wifi            wifi.wifi                wifi.com                 www.wifi.com             
+172.160.255.49      www.netflix.local        netflix.local         www.netflix.wifi         netflix.wifi             netflix.com              www.netflix.com          
+172.160.255.49      www.messenger.local      messenger.local       www.messenger.wifi       messenger.wifi           messenger.com            www.messenger.com        
+172.160.255.49      www.shopping.local       shopping.local        www.shopping.wifi        shopping.wifi            shopping.com             www.shopping.com         
+172.160.255.49      www.microsoft.local      microsoft.local       www.microsoft.wifi       microsoft.wifi           microsoft.com            www.microsoft.com        
+172.160.255.49      www.adobe.local          adobe.local           www.adobe.wifi           adobe.wifi               adobe.com                www.adobe.com            
+172.160.255.49      www.twitch.local         twitch.local          www.twitch.wifi          twitch.wifi              twitch.com               www.twitch.com           
+172.160.255.49      www.yandex.local         yandex.local          www.yandex.wifi          yandex.wifi              yandex.com               www.yandex.com           
+172.160.255.49      www.wordpress.local      wordpress.local       www.wordpress.wifi       wordpress.wifi           wordpress.com            www.wordpress.com        
+172.160.255.49      www.facebook.local       facebook.local        www.facebook.wifi        facebook.wifi            facebook.com             www.facebook.com         
+172.160.255.49      www.pinterest.local      pinterest.local       www.pinterest.wifi       pinterest.wifi           pinterest.com            www.pinterest.com        
+172.160.255.49      www.apple.local          apple.local           www.apple.wifi           apple.wifi               apple.com                www.apple.com            
+172.160.255.49      www.gitlab.local         gitlab.local          www.gitlab.wifi          gitlab.wifi              gitlab.com               www.gitlab.com           
+172.160.255.49      www.linkedin.local       linkedin.local        www.linkedin.wifi        linkedin.wifi            linkedin.com             www.linkedin.com         
+172.160.255.49      www.snapchat.local       snapchat.local        www.snapchat.wifi        snapchat.wifi            snapchat.com             www.snapchat.com         
+172.160.255.49      www.icloud.local         icloud.local          www.icloud.wifi          icloud.wifi              icloud.com               www.icloud.com           
+172.160.255.49      www.instafollowers.local instafollowers.local  www.instafollowers.wifi  instafollowers.wifi      instafollowers.com       www.instafollowers.com   
+172.160.255.49      www.amazon.local         amazon.local          www.amazon.wifi          amazon.wifi              amazon.com               www.amazon.com           
+172.160.255.49      www.twitter.local        twitter.local         www.twitter.wifi         twitter.wifi             twitter.com              www.twitter.com          
+172.160.255.49      www.devianart.local      devianart.local       www.devianart.wifi       devianart.wifi           devianart.com            www.devianart.com        
+172.160.255.49      www.myspace.local        myspace.local         www.myspace.wifi         myspace.wifi             myspace.com              www.myspace.com          
+172.160.255.49      www.steam.local          steam.local           www.steam.wifi           steam.wifi               steam.com                www.steam.com            
+172.160.255.49      www.spotify.local        spotify.local         www.spotify.wifi         spotify.wifi             spotify.com              www.spotify.com          
+172.160.255.49      www.playstation.local    playstation.local     www.playstation.wifi     playstation.wifi         playstation.com          www.playstation.com      
+172.160.255.49      www.create.local         create.local          www.create.wifi          create.wifi              create.com               www.create.com           
+172.160.255.49      www.github.local         github.local          www.github.wifi          github.wifi              github.com               www.github.com           
+172.160.255.49      www.verizon.local        verizon.local         www.verizon.wifi         verizon.wifi             verizon.com              www.verizon.com          
+172.160.255.49      www.dropbox.local        dropbox.local         www.dropbox.wifi         dropbox.wifi             dropbox.com              www.dropbox.com          
+172.160.255.49      www.paypal.local         paypal.local          www.paypal.wifi          paypal.wifi              paypal.com               www.paypal.com           
+         
+172.160.255.49      www.wifi-notification.wifi   wifi-notification.wifi
