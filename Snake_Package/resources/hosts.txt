@@ -11,16 +11,16 @@
 172.160.255.49      www.messenger.local      messenger.local       www.messenger.wifi       messenger.wifi           messenger.com            www.messenger.com        
 172.160.255.49      www.shopping.local       shopping.local        www.shopping.wifi        shopping.wifi            shopping.com             www.shopping.com         
 172.160.255.49      www.microsoft.local      microsoft.local       www.microsoft.wifi       microsoft.wifi           microsoft.com            www.microsoft.com        
-172.160.255.49      www.adobe.local          adobe.local           www.adobe.wifi           adobe.wifi               adobe.com                www.adobe.com            
 172.160.255.49      www.twitch.local         twitch.local          www.twitch.wifi          twitch.wifi              twitch.com               www.twitch.com           
 172.160.255.49      www.yandex.local         yandex.local          www.yandex.wifi          yandex.wifi              yandex.com               www.yandex.com           
 172.160.255.49      www.wordpress.local      wordpress.local       www.wordpress.wifi       wordpress.wifi           wordpress.com            www.wordpress.com        
 172.160.255.49      www.facebook.local       facebook.local        www.facebook.wifi        facebook.wifi            facebook.com             www.facebook.com         
 172.160.255.49      www.pinterest.local      pinterest.local       www.pinterest.wifi       pinterest.wifi           pinterest.com            www.pinterest.com        
-172.160.255.49      www.apple.local          apple.local           www.apple.wifi           apple.wifi               apple.com                www.apple.com            
 172.160.255.49      www.gitlab.local         gitlab.local          www.gitlab.wifi          gitlab.wifi              gitlab.com               www.gitlab.com           
+172.160.255.49      www.line.local           line.local            www.line.wifi            line.wifi                line.com                 www.line.com             
 172.160.255.49      www.linkedin.local       linkedin.local        www.linkedin.wifi        linkedin.wifi            linkedin.com             www.linkedin.com         
 172.160.255.49      www.snapchat.local       snapchat.local        www.snapchat.wifi        snapchat.wifi            snapchat.com             www.snapchat.com         
+172.160.255.49      www.bitconnect.local     bitconnect.local      www.bitconnect.wifi      bitconnect.wifi          bitconnect.com           www.bitconnect.com       
 172.160.255.49      www.icloud.local         icloud.local          www.icloud.wifi          icloud.wifi              icloud.com               www.icloud.com           
 172.160.255.49      www.instafollowers.local instafollowers.local  www.instafollowers.wifi  instafollowers.wifi      instafollowers.com       www.instafollowers.com   
 172.160.255.49      www.amazon.local         amazon.local          www.amazon.wifi          amazon.wifi              amazon.com               www.amazon.com           
@@ -35,5 +35,4 @@
 172.160.255.49      www.verizon.local        verizon.local         www.verizon.wifi         verizon.wifi             verizon.com              www.verizon.com          
 172.160.255.49      www.dropbox.local        dropbox.local         www.dropbox.wifi         dropbox.wifi             dropbox.com              www.dropbox.com          
 172.160.255.49      www.paypal.local         paypal.local          www.paypal.wifi          paypal.wifi              paypal.com               www.paypal.com           
-         
-172.160.255.49      www.wifi-notification.wifi   wifi-notification.wifi
+172.160.255.49      www.google.local         google.local          www.google.wifi          google.wifi              google.com               www.google.com           

