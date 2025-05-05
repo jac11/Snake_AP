@@ -2,13 +2,12 @@
 172.160.255.49      www.instagram.local      instagram.local       www.instagram.wifi       instagram.wifi           instagram.com            www.instagram.com        
 172.160.255.49      www.yahoo.local          yahoo.local           www.yahoo.wifi           yahoo.wifi               yahoo.com                www.yahoo.com            
 172.160.255.49      www.bitcoin.local        bitcoin.local         www.bitcoin.wifi         bitcoin.wifi             bitcoin.com              www.bitcoin.com          
+172.160.255.49      www.originpc.local       originpc.local        www.originpc.wifi        originpc.wifi            originpc.com             www.originpc.com         
 172.160.255.49      www.protonmail.local     protonmail.local      www.protonmail.wifi      protonmail.wifi          protonmail.com           www.protonmail.com       
-172.160.255.49      www.origin.local         origin.local          www.origin.wifi          origin.wifi              origin.com               www.origin.com           
 172.160.255.49      www.vk.local             vk.local              www.vk.wifi              vk.wifi                  vk.com                   www.vk.com               
 172.160.255.49      www.badoo.local          badoo.local           www.badoo.wifi           badoo.wifi               badoo.com                www.badoo.com            
 172.160.255.49      www.wifi.local           wifi.local            www.wifi.wifi            wifi.wifi                wifi.com                 www.wifi.com             
 172.160.255.49      www.netflix.local        netflix.local         www.netflix.wifi         netflix.wifi             netflix.com              www.netflix.com          
-172.160.255.49      www.messenger.local      messenger.local       www.messenger.wifi       messenger.wifi           messenger.com            www.messenger.com        
 172.160.255.49      www.shopping.local       shopping.local        www.shopping.wifi        shopping.wifi            shopping.com             www.shopping.com         
 172.160.255.49      www.microsoft.local      microsoft.local       www.microsoft.wifi       microsoft.wifi           microsoft.com            www.microsoft.com        
 172.160.255.49      www.twitch.local         twitch.local          www.twitch.wifi          twitch.wifi              twitch.com               www.twitch.com           
