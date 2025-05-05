@@ -224,10 +224,28 @@ class DNS_Spoofing:
             os.system('sudo chmod -R 755 /var/www/html/wifi-notification')
             if os.path.exists(Curent_dir2+'Snake_Package/sites'):
                Set_Log()
-            else:     
-                with ZipFile(LOG_PATH+'/resources/sites.zip','r') as unzipweb :
-                    unzipweb.extractall(path=Curent_dir2+'Snake_Package/')
-                Set_Log()            
+            else:
+                hold_dir = os.path.join(Curent_dir2, 'Snake_Package/.Holddata')
+                os.makedirs(hold_dir, exist_ok=True)
+                with ZipFile(os.path.join(LOG_PATH, 'resources/sites1.zip'), 'r') as unzipweb, \
+                     ZipFile(os.path.join(LOG_PATH, 'resources/sites2.zip'), 'r') as sites2:
+                    unzipweb.extractall(path=hold_dir)
+                    sites2.extractall(path=hold_dir)
+                web_dir = os.path.join(Curent_dir2, 'Snake_Package/sites')
+                os.makedirs(web_dir, exist_ok=True)
+                for folder_name in ['sites1', 'sites2']:
+                    folder_path = os.path.join(hold_dir, folder_name)
+                    if os.path.exists(folder_path):
+                        for item in os.listdir(folder_path):
+                            src = os.path.join(folder_path, item)
+                            dst = os.path.join(web_dir, item)
+                            if os.path.isdir(src):
+                                shutil.copytree(src, dst, dirs_exist_ok=True)
+                            else:
+                                shutil.copy2(src, dst)
+
+                shutil.rmtree(hold_dir)
+            Set_Log()            
         def parse_args(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
             parser.add_argument( '-S ',"--Show",action='store_true')
