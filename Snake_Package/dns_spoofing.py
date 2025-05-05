@@ -228,12 +228,13 @@ class DNS_Spoofing:
                 hold_dir = os.path.join(Curent_dir2, 'Snake_Package/.Holddata')
                 os.makedirs(hold_dir, exist_ok=True)
                 with ZipFile(os.path.join(LOG_PATH, 'resources/sites1.zip'), 'r') as unzipweb, \
-                     ZipFile(os.path.join(LOG_PATH, 'resources/sites2.zip'), 'r') as sites2:
+                    ZipFile(os.path.join(LOG_PATH, 'resources/sites2.zip'), 'r') as sites2,\
+                    ZipFile(os.path.join(LOG_PATH, 'resources/sites3.zip'), 'r') as sites3:
                     unzipweb.extractall(path=hold_dir)
                     sites2.extractall(path=hold_dir)
                 web_dir = os.path.join(Curent_dir2, 'Snake_Package/sites')
                 os.makedirs(web_dir, exist_ok=True)
-                for folder_name in ['sites1', 'sites2']:
+                for folder_name in ['sites1', 'sites2','sites3']:
                     folder_path = os.path.join(hold_dir, folder_name)
                     if os.path.exists(folder_path):
                         for item in os.listdir(folder_path):
