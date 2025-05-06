@@ -247,7 +247,7 @@ class DNS_Spoofing:
                                 shutil.copy2(src, dst)
 
                 shutil.rmtree(hold_dir)
-            Set_Log()            
+                Set_Log()            
         def parse_args(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
             parser.add_argument( '-S ',"--Show",action='store_true')
