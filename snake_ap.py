@@ -369,17 +369,73 @@ class Fake_access_point:
                   time.sleep(1)
                   exit() 
       def args_Control(self):
-            parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
-            parser.add_argument( '-S ',"--Show",action='store_true',help="Show all access point around you [bssid-ssid-channel-sagenal]" )
-            parser.add_argument( '-I ',"--Interface",action=None,required = False ,help="Interface act AP 'Support AP Mode'" )                          
-            parser.add_argument( '-AP ',"--APName",action=None,help = "Name of access point [ if not set the name option Defualit name is 'Free-wifi']")
-            parser.add_argument( '-D ',"--Deauth",action=None,help = "send Deauth packet to the victom wifi [ airepay-ng ] ")
-            parser.add_argument( '-CP ',"--Portal",action='store_true',help = "set service wifi login page  [Captive_Portal]")
-            parser.add_argument( '-L ',"--List",action='store_true',help = "Check the AP avelabale")
-            parser.add_argument( '-T ',"--Target",action=None ,help = "Mac address of Target to send deauth packet ")
-            parser.add_argument( '-P ',"--Packet",action=None ,help = "how may time of Deauth Packet to send  ",type=int)
-            parser.add_argument( '--dns',action='store_true' ,help = "Spoofing Dns wtih some of website  ")
-            
+            parser = argparse.ArgumentParser(
+                description="A tool for Wi-Fi network analysis and security testing."
+            )
+
+            # Arguments with improved help text
+            parser.add_argument(
+                '-S', '--show',
+                action='store_true',
+                help="Scan and display nearby access points (BSSID, SSID, channel, signal strength)."
+            )
+
+            parser.add_argument(
+                '-I', '--interface',
+                metavar='INTERFACE',
+                help="Network interface to use (must support AP mode)."
+            )
+
+            parser.add_argument(
+                '-AP', '--ap-name',
+                metavar='NAME',
+                default='Free-wifi',
+                help="Name for the access point (default: 'Free-wifi')."
+            )
+
+            parser.add_argument(
+                '-D', '--deauth',
+                action='store_true',
+                help="Launch deauthentication attack using aireplay-ng."
+            )
+
+            parser.add_argument(
+                '-CP', '--portal',
+                action='store_true',
+                help="Enable captive portal for WiFi login page."
+            )
+
+            parser.add_argument(
+                '-L', '--list',
+                action='store_true',
+                help="List all available access points."
+            )
+
+            parser.add_argument(
+                '-T', '--target',
+                metavar='MAC',
+                help="Target MAC address for deauthentication packets."
+            )
+
+            parser.add_argument(
+                '-P', '--packets',
+                metavar='COUNT',
+                type=int,
+                help="Number of deauthentication packets to send."
+            )
+
+            parser.add_argument(
+                '--cert',
+                action='store_true',
+                help="Renew SSL certificates spoofing for specified websites."
+            )
+
+            parser.add_argument(
+                '--dns',
+                action='store_true',
+                help="Enable DNS spoofing for specified websites."
+            )
+                        
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
                  pass
