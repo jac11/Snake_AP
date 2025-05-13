@@ -235,8 +235,10 @@ class DNS_Spoofing:
 
                                     DocumentRoot /var/www/html/{file}
                                     SSLEngine on
-                                    SSLCertificate File {LOG_PATH}/SSLCertificate File/{file}.pem
-                                    SSLCertificate KeyFile {LOG_PATH}/SSLCertificate File/{file}.pem
+                                    SSLCertificateFile {LOG_PATH}/SSLCertificate/{file}.pem
+                                    SSLCertificateKeyFile {LOG_PATH}/SSLCertificate/{file}.pem
+                                    SSLCertificateChainFile {LOG_PATH}/SSLCertificate/{file}.pem
+
                                     # Bypass security headers that might interfere with development
                                     Header always set Public-Key-Pins ""
                                     Header always set Expect-CT ""
