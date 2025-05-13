@@ -22,6 +22,8 @@ os.system("sudo fuser -k 53/udp >/dev/null 2>&1 ")
 
 Curent_dir  = os.path.abspath(os.getcwd())
 user_name   = os.path.dirname(os.path.abspath(__file__)).split ("/")[2]
+resources1 =str(os.path.dirname(__file__))+'/Snake_Package/resources/apache2.conf.txt'
+resources2= str(os.path.dirname(__file__))+'/Snake_Package/CopyConfig.sh'
 
 def Check_Packages(): 
      list_Pakages = [
@@ -55,11 +57,36 @@ def Check_Packages():
                   exit()   
 Check_Packages()
 
+def BackUp_apache2(Path1,Path2):
+    if os.path.exists('/etc/apache2/apache2.conf.bck'):
+        pass
+    else:  
+        os.chmod(Path2, 0o755)
+        subprocess.run(
+        ["/bin/bash", "--noprofile", "--norc" ,Path2 ],
+        check=True
+        )
+        print("[*] apache2 Configrution backup Done")
+        with open (Path1,'r') as addConfig:
+            addConfig = addConfig.read()
+        with open('/etc/apache2/apache2.conf' ,'w') as CaptivePortalConfig:
+            CaptivePortalConfig = CaptivePortalConfig.write(addConfig)
+BackUp_apache2(resources1,resources2)    
+
+def RESet(Path):
+    os.chmod(Path, 0o755)
+    subprocess.run(
+
+        ["/bin/bash", "--noprofile", "--norc" ,Path ],
+        check=True
+       )
+    print("[*] Reset all Apache2 configurations, clear cache, and remove all Snake_AP setups ")
+
 class Fake_access_point:
      
       def __init__(self):
           self.args_Control()  
-          if self.args.List and len(sys.argv)==2:
+          if self.args.List and len(sys.argv)!=2:
              all_Interface = os.listdir('/sys/class/net/') 
              print("[+] List of Devices avelable "+'\n'+('='*20)+'\n')
              for interface in all_Interface :
@@ -70,7 +97,7 @@ class Fake_access_point:
               print("[+] use the option with out argumet < sudo ./snake_ap.py -L > ")
               exit()
           self.Show_ap_all() 
-          if 'None' in str(self.args.Interface):
+          if 'None' in str(self.args.Interface) and not self.args.reset:
              print("usage: snake_ap.py [-h] [-I  ] [-S ] [-AP ] [-D  ] [-CP] [-L]")
              print("snake_ap.py: error: argument -I  /--Interface: required ")
              exit()
@@ -82,6 +109,14 @@ class Fake_access_point:
               else:
                  print("[+] fetching interface information : Device not found under Name ", self.args.Interface)
                  exit()  
+          if self.args.reset:
+            if  len(sys.argv)==2 :
+                RESet(str(os.path.dirname(__file__))+'/Snake_Package/ReSet.sh')
+                exit()
+            else:    
+               print("[*] error : argumet --reset ")
+               print("[+] use the option with out argumet < sudo ./snake_ap.py --reset > ")
+               exit() 
           if self.args.Deauth :
              Mac_Format = re.compile(r'(?:[0-9a-fA-F]:?){12}')
              Mac_found = re.findall(Mac_Format , self.args.Deauth  )
@@ -96,7 +131,7 @@ class Fake_access_point:
              os.system(command ) #sudo iw dev Sanke1 del 
 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
-
+                 
           else:
                 pass       
           self.Clean_IP_Table()         
@@ -369,72 +404,20 @@ class Fake_access_point:
                   time.sleep(1)
                   exit() 
       def args_Control(self):
-            parser = argparse.ArgumentParser(
-                description="A tool for Wi-Fi network analysis and security testing."
-            )
-
-            # Arguments with improved help text
-            parser.add_argument(
-                '-S', '--show',
-                action='store_true',
-                help="Scan and display nearby access points (BSSID, SSID, channel, signal strength)."
-            )
-
-            parser.add_argument(
-                '-I', '--interface',
-                metavar='INTERFACE',
-                help="Network interface to use (must support AP mode)."
-            )
-
-            parser.add_argument(
-                '-AP', '--ap-name',
-                metavar='NAME',
-                default='Free-wifi',
-                help="Name for the access point (default: 'Free-wifi')."
-            )
-
-            parser.add_argument(
-                '-D', '--deauth',
-                action='store_true',
-                help="Launch deauthentication attack using aireplay-ng."
-            )
-
-            parser.add_argument(
-                '-CP', '--portal',
-                action='store_true',
-                help="Enable captive portal for WiFi login page."
-            )
-
-            parser.add_argument(
-                '-L', '--list',
-                action='store_true',
-                help="List all available access points."
-            )
-
-            parser.add_argument(
-                '-T', '--target',
-                metavar='MAC',
-                help="Target MAC address for deauthentication packets."
-            )
-
-            parser.add_argument(
-                '-P', '--packets',
-                metavar='COUNT',
-                type=int,
-                help="Number of deauthentication packets to send."
-            )
-
-            parser.add_argument(
-                '--cert',
-                action='store_true',
-                help="Renew SSL certificates spoofing for specified websites."
-            )
-
-            parser.add_argument(
-                '--dns',
-                action='store_true',
-                help="Enable DNS spoofing for specified websites."
-            )
+            parser = argparse.ArgumentParser(description="Usage: <Option> <Arguments>")
+            parser = argparse.ArgumentParser(description="Usage: <Option> <Arguments>")
+            parser.add_argument('-S', "--Show", action='store_true', help="Display all nearby access points with details such as BSSID, SSID, channel, and signal strength.")
+            parser.add_argument('-I', "--Interface", action=None, required=False, help="Specify the network interface to act as an access point (must support AP mode).")
+            parser.add_argument('-AP', "--APName", action=None, help="Set the name of the access point (default is 'Free-wifi' if not specified).")
+            parser.add_argument('-D', "--Deauth", action=None, help="Send deauthentication packets to a target WiFi network using 'aireplay-ng'.")
+            parser.add_argument('-CP', "--Portal", action='store_true', help="Enable a captive portal for WiFi login pages.")
+            parser.add_argument('-L', "--List", action='store_true', help="Check the availability of access points.")
+            parser.add_argument('-T', "--Target", action=None, help="Specify the MAC address of the target device to send deauthentication packets.")
+            parser.add_argument('-P', "--Packet", action=None, type=int, help="Set the number of deauthentication packets to send.")
+            parser.add_argument('-cert', action='store_true', help="Renew SSL certificates.")
+            parser.add_argument('--dns', action='store_true', help="Enable DNS spoofing for selected websites.")
+            parser.add_argument('--cert', action='store_true', help="Renew SSL certificates spoofing for specified websites.")
+            parser.add_argument('--reset', action='store_true', help="Reset all Apache2 configurations, clear cache, and remove all Snake_AP setups.")
                         
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
@@ -443,14 +426,4 @@ class Fake_access_point:
                  parser.print_help()
                  exit()                
 if __name__=='__main__':
-    if os.path.exists('/etc/apache2/apache2.conf.bck'):
-        pass
-    else:  
-        with open('/etc/apache2/apache2.conf' ,'r') as copydefulit , \
-        open('/etc/apache2/apache2.conf.bck','w') as writecopy:
-            writecopy.write(copydefulit.read())
-        with open (str(os.path.dirname(__file__))+'/Snake_Package/resources/apache2.conf.txt','r') as addConfig:
-            addConfig = addConfig.read()
-        with open('/etc/apache2/apache2.conf' ,'w') as CaptivePortalConfig:
-            CaptivePortalConfig = CaptivePortalConfig.write(addConfig)
     Fake_access_point()
