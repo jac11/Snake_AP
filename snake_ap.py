@@ -87,17 +87,21 @@ class Fake_access_point:
      
       def __init__(self):
           self.args_Control()  
-          if self.args.List and len(sys.argv)!=2:
-             all_Interface = os.listdir('/sys/class/net/') 
-             print("[+] List of Devices avelable "+'\n'+('='*20)+'\n')
-             for interface in all_Interface :
-                 print("[+] Interface : ",interface)
-             exit()
-          elif self.args.List and len(sys.argv)!=2 :
-              print("[*] error : argumet -L/--List ")
-              print("[+] use the option with out argumet < sudo ./snake_ap.py -L > ")
-              exit()
-          self.Show_ap_all() 
+          if self.args.List and not self.args.Interface:
+             # Check if the correct number of arguments is provided
+                if len(sys.argv) == 2 :
+                    all_interfaces = os.listdir('/sys/class/net/')
+                    print("[+] List of Available Devices\n" + "=" * 25)
+                    for interface in all_interfaces:
+                        print("[+] Interface:", interface)
+                    exit()    
+                else:
+                    print("[*] Error: The -L/--List option should be used without additional arguments.")
+                    print("[+] Usage: sudo ./snake_ap.py -L")
+                    exit(1)
+
+          if self.args.Show and not self.args.Interface:
+            self.Show_ap_all()
           if 'None' in str(self.args.Interface) and not self.args.reset:
              print("usage: snake_ap.py [-h] [-I  ] [-S ] [-AP ] [-D  ] [-CP] [-L]")
              print("snake_ap.py: error: argument -I  /--Interface: required ")
@@ -133,7 +137,7 @@ class Fake_access_point:
 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
           if self.args.dns or self.args.Portal:
-                BackUp_apache2(resources1,resources2)     
+            BackUp_apache2(resources1,resources2)     
           else:
                 pass       
           self.Clean_IP_Table()         
