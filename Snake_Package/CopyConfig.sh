@@ -1,20 +1,20 @@
 #!/bin/bash
 
-# Migrate Apache config files and clean up
-[ -f "/etc/apache2/sites-available/000-bckault.bck" ] && \
-    sudo cp /etc/apache2/sites-available/000-bckault.bck /etc/apache2/sites-available/000-bckault.conf && \
-    sudo rm -f /etc/apache2/sites-available/000-bckault.bck
+if [ -f /etc/apache2/sites-available/000-default.conf ]; then
+    sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.bck
+    sudo cp /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-available/default-ssl.bck
+fi
+if [ -f /etc/apache2/ports.conf ]; then
+    sudo cp /etc/apache2/ports.conf /etc/apache2/ports.bck  
+fi
+BACKUP_DIR="/var/www/bck/"
+if [ ! -d "$BACKUP_DIR" ]; then
+    sudo mkdir -p "$BACKUP_DIR"
+fi
+sudo cp -rf /var/www/html/* "$BACKUP_DIR"
 
-[ -f "/etc/apache2/ports.bck" ] && \
-    sudo cp /etc/apache2/ports.bck /etc/apache2/ports.conf && \
-    sudo rm -f /etc/apache2/ports.bck
-
-[ -d "/var/www/bck/" ] && \
-    sudo mv -f /var/www/bck/* /var/www/html/ && \
-    sudo rm -rf /var/www/bck/
-
-[ -f "/etc/apache2/apache2.bck" ] && \
-    sudo cp /etc/apache2/apache2.bck /etc/apache2/apache2.conf && \
-    sudo rm -f /etc/apache2/apache2.bck
+if [ -f /etc/apache2/apache2.conf ]; then
+    sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.bck
+fi
 
 exit 0

@@ -1,21 +1,38 @@
 #!/bin/bash
 
 
-[ -f "/etc/apache2/sites-available/000-default.def" ] && \
-    cp /etc/apache2/sites-available/000-default.def /etc/apache2/sites-available/000-default.conf && \
-    rm -f /etc/apache2/sites-available/000-default.def
+if [ -f "/etc/apache2/ports.bck" ]; then
+    sudo cp /etc/apache2/ports.bck /etc/apache2/ports.conf
+    sudo rm -f /etc/apache2/ports.bck
 
-[ -f "/etc/apache2/ports.def" ] && \
-    cp /etc/apache2/ports.def /etc/apache2/ports.conf && \
-    rm -f /etc/apache2/ports.def
+fi
 
-[ -d "/var/www/def/" ] && \
-    mv -f /var/www/def/* /var/www/html/ && \
-    rm -rf /var/www/def/
 
-[ -f "/etc/apache2/apache2.def" ] && \
-    cp /etc/apache2/apache2.def /etc/apache2/apache2.conf && \
-    rm -f /etc/apache2/apache2.def
+if [ -d "/var/www/bck/" ]; then
+    sudo mv -f /var/www/bck/* /var/www/html/ 2>/dev/null
+    sudo rm -rf /var/www/bck/
+
+fi
+
+if [ -f "/etc/apache2/apache2.bck" ]; then
+    sudo cp /etc/apache2/apache2.bck /etc/apache2/apache2.conf
+    sudo rm -f /etc/apache2/apache2.bck
+
+fi
+#!/bin/bash
+
+CONFIG_DIR="/etc/apache2/sites-available"
+
+# Delete all .conf files
+sudo find "$CONFIG_DIR" -type f -name "*.conf" -exec rm -f {} \;
+
+# Copy .bck files to .conf
+for file in "$CONFIG_DIR"/*.bck; do
+    if [ -f "$file" ]; then
+        sudo cp "$file" "${file%.bck}.conf"
+        sudo rm -f "$file"
+    fi
+done
 
 
 TARGET_PATHS=(
@@ -33,10 +50,9 @@ find / -type d \( \
 \) 2>/dev/null | while read -r target; do
     for valid_path in "${TARGET_PATHS[@]}"; do
         if [[ "$target" == *"$valid_path" ]]; then
-            rm -rf "$target"
+            sudo rm -rf "$target"
             break
         fi
     done
 done
-
 exit 0
