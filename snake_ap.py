@@ -57,6 +57,7 @@ def Check_Packages():
                   exit()   
 Check_Packages()
 
+
 def BackUp_apache2(Path1,Path2):
     if os.path.exists('/etc/apache2/apache2.conf.bck'):
         pass
@@ -66,12 +67,12 @@ def BackUp_apache2(Path1,Path2):
         ["/bin/bash", "--noprofile", "--norc" ,Path2 ],
         check=True
         )
-        print("[*] apache2 Configrution backup Done")
+        print('[*] Apache2 Configuration Backup and Migration completed successfully.')
         with open (Path1,'r') as addConfig:
             addConfig = addConfig.read()
         with open('/etc/apache2/apache2.conf' ,'w') as CaptivePortalConfig:
             CaptivePortalConfig = CaptivePortalConfig.write(addConfig)
-BackUp_apache2(resources1,resources2)    
+   
 
 def RESet(Path):
     os.chmod(Path, 0o755)
@@ -131,7 +132,8 @@ class Fake_access_point:
              os.system(command ) #sudo iw dev Sanke1 del 
 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
-                 
+          if self.args.dns or self.args.Portal:
+                BackUp_apache2(resources1,resources2)     
           else:
                 pass       
           self.Clean_IP_Table()         
