@@ -102,7 +102,7 @@ class DNS_Spoofing:
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
                 os.system("sudo a2dissite 000-default.conf >/dev/null 2>&1")
                 os.system("sudo a2enmod rewrite >/dev/null 2>&1")
-                os.system("sudo a2enmod php8.4 > /dev/nul 2>&1")
+                os.system("sudo a2enmod php > /dev/nul 2>&1")
                 os.system("sudo a2enmod headers >/dev/null 2>&1")
                 os.system("systemctl restart apache2 >/dev/null 2>&1")
 
