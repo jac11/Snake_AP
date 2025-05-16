@@ -98,14 +98,17 @@ class DNS_Spoofing:
                              port = portset.read()
                          with open ("/etc/apache2/ports.conf" ,'w') as portset :  
                               portset.write(port)  
-                              
+                result = subprocess.run(["php", "-v"], capture_output=True, text=True, check=True)
+                match = re.search(r"PHP (\d+\.\d+)", result.stdout)
+                if match:
+                    php_version = match.group(1)
+                    os.system(f"sudo a2enmod php{php_version} > /dev/null 2>&1")
+                    print(f"[+] Enabled PHP module: php{php_version}")
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
                 os.system("sudo a2dissite 000-default.conf >/dev/null 2>&1")
-                os.system("sudo a2enmod rewrite >/dev/null 2>&1")
-                os.system("sudo a2enmod php > /dev/nul 2>&1")
+                os.system("sudo a2enmod rewrite >/dev/null 2>&1")  
                 os.system("sudo a2enmod headers >/dev/null 2>&1")
                 os.system("systemctl restart apache2 >/dev/null 2>&1")
-
                 if os.system("sudo apache2ctl configtest >/dev/null 2>&1") == 0 :
                     print("[+] DNS has been Start")
                     print("[+] Apache2 Configuration Test  Syntax OK")
