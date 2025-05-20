@@ -7,6 +7,7 @@ from subprocess import PIPE
 import argparse
 import sys
 import shutil
+import re
 import time
 from zipfile import ZipFile
 
@@ -65,7 +66,6 @@ class DNS_Spoofing:
         def __init__(self):
             self.parse_args()
             self.unzip_web()
-            self.Certificate_Self()
             self.write_hosts()
             self.VirtualHost_files()       
             self.DNS_COPY_WEB()
@@ -102,8 +102,10 @@ class DNS_Spoofing:
                 match = re.search(r"PHP (\d+\.\d+)", result.stdout)
                 if match:
                     php_version = match.group(1)
-                    os.system(f"sudo a2enmod php{php_version} > /dev/null 2>&1")
-                    print(f"[+] Enabled PHP module: php{php_version}")
+                    check = subprocess.run(["sudo", "a2enmod" ,f"php{php_version}"], capture_output=True, text=True, check=True)
+                    if "systemctl restart apache2" in check.stdout:
+                        print(f"[+] Enabled PHP module: php{php_version}")
+
                 os.system("sudo a2enmod ssl > /dev/null 2>&1")                     
                 os.system("sudo a2dissite 000-default.conf >/dev/null 2>&1")
                 os.system("sudo a2enmod rewrite >/dev/null 2>&1")  
@@ -190,8 +192,13 @@ class DNS_Spoofing:
                                     ServerAlias www.{file}.wifi
                                     ServerAlias {file}.local
                                     ServerAlias www.{file}.local
-                                    ServerAlias {file}.com
                                     ServerAlias www.{file}.com
+                                    ServerAlias www.{file}.me
+                                    ServerAlias www.{file}.hosting
+                                    ServerAlias {file}.com
+                                    ServerAlias {file}.me
+                                    ServerAlias {file}.hosting
+
 
                                     RewriteEngine On
                                     DocumentRoot /var/www/html/{file}
@@ -235,6 +242,12 @@ class DNS_Spoofing:
                                     ServerAlias www.{file}.local
                                     ServerAlias {file}.com
                                     ServerAlias www.{file}.com
+                                    ServerAlias www.{file}.me
+                                    ServerAlias www.{file}.hosting
+                                    ServerAlias {file}.com
+                                    ServerAlias {file}.me
+                                    ServerAlias {file}.hosting
+
 
                                     DocumentRoot /var/www/html/{file}
                                     SSLEngine on
@@ -353,6 +366,7 @@ class DNS_Spoofing:
                                 shutil.copy2(src, dst)
 
                 shutil.rmtree(hold_dir)
+                self.Certificate_Self()
                 Set_Log()            
         def parse_args(self):
             parser = argparse.ArgumentParser( description="Usage: <OPtion> <arguments> ")
