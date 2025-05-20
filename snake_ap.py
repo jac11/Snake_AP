@@ -137,7 +137,11 @@ class Fake_access_point:
 
              print("\n[+] Snake_AP add 'wlansnake'  as Virtual Interfaces ......!! ")
           if self.args.dns or self.args.Portal:
-            BackUp_apache2(resources1,resources2)     
+            file  = os.listdir('/etc/apache2')
+            if 'ports.bck' in file: 
+                pass
+            else :    
+                BackUp_apache2(resources1,resources2)     
           else:
                 pass       
           self.Clean_IP_Table()         
