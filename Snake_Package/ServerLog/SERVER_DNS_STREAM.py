@@ -34,9 +34,16 @@ class Read_Stream_Update :
        def __init__(self):
            self.while_read()
        def while_read(self):
-          try:
+        printF = ""
+        printF += " " + "-" * 103 +'\n'
+        printF += "| " + f"{'       Site-Name    ':<20}"+ ' |' + f"{'       auth_user    ':<35}"+ "  | " + f"{'         PASSWORD   ':<39}  |"+'\n'
+        printF += " " + "-" * 103
+        with open(f"{Path_St}.CopyData",'w') as Copy:
+            Copy.write(printF+'\n')
+
+        try:
               while True :
-                 remotefile = "python "+ Path_St +'DNS_SPOOFING_LOG.py > '+ Path_St+'SERVLOGIN_DB.txt'
+                 remotefile = "python "+ Path_St +'DNS_SPOOFING_LOG.py'
                  #call_termminal = subprocess.call(remotefile,shell=True,stderr=subprocess.PIPE)
                  os.system(remotefile)
                  with open(Path_St+'SERVLOGIN_DB.txt','r') as filedb :
@@ -44,8 +51,10 @@ class Read_Stream_Update :
                     os.system('clear')
                     print('\n'+('='*20)+'\n[+] Important Note '+'\n'+('='*20)+'\n'+'[+] This File read in real Time will be Update evey 30 Seconds'\
                     +'\n'+('='*40)+'\n'+db_file)
+                    with open(f"{Path_St}.CopyData",'r') as Copy:
+                         print(Copy.read())
                     time.sleep(30)
-          except KeyboardInterrupt :             
+        except KeyboardInterrupt :             
                  with open (Path_St+'SERVLOGIN_DB.txt','r')as reas_DB :
                       read_data = reas_DB.readlines()
                  with open(Path_DB_PASS+'/WEB_AUTH_db.txt','r') as read_list : 
