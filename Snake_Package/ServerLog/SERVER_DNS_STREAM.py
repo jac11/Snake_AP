@@ -59,9 +59,7 @@ class Read_Stream_Update :
                     with open(f"{Path_St}.CopyData",'r') as printdata :
                         sys.stdout.write('\033[H\033[2J\033[3J')
                         sys.stdout.flush()
-                        print(printdata.read())
-                        pass
-
+                        print(printdata.read()) 
                     time.sleep(30)
         except KeyboardInterrupt :             
                 with open (Path_St+'SERVLOGIN_DB.txt','r')as reas_DB :
