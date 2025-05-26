@@ -10,7 +10,8 @@ import subprocess
 from subprocess import PIPE
 from Snake_Package.banner import *
 from Snake_Package.Deauth_wifi import Deauth_Router
-
+R='\033[31m'
+W='\033[0m'
 
 print(Banner2)
 if os.geteuid() != 0 :
@@ -102,7 +103,7 @@ class Fake_access_point:
 
           if self.args.Show and not self.args.Interface:
             self.Show_ap_all()
-          if 'None' in str(self.args.Interface) and not self.args.reset:
+          if 'None' in str(self.args.Interface) and not self.args.reset and not self.args.webdata:
              print("usage: snake_ap.py [-h] [-I  ] [-S ] [-AP ] [-D  ] [-CP] [-L]")
              print("snake_ap.py: error: argument -I  /--Interface: required ")
              exit()
@@ -112,7 +113,7 @@ class Fake_access_point:
               if (self.args.Interface in all_Interface) or (str(self.args.Interface)+'mon' in all_Interface) :
                  print("[+] ChecK Paskages ....Done !! ")              
               else:
-                 print("[+] fetching interface information : Device not found under Name ", self.args.Interface)
+                 print(f"[+] Interface failed : {R}{self.args.Interface}{W} is not currently connected or does not exist")
                  exit()  
           if self.args.reset:
             if  len(sys.argv)==2 :
@@ -120,8 +121,22 @@ class Fake_access_point:
                 exit()
             else:    
                print("[*] error : argumet --reset ")
-               print("[+] use the option with out argumet < sudo ./snake_ap.py --reset > ")
+               print("[+] use the option with out argumet < sudo ./snake_ap.py --reset > ")                          
                exit() 
+          if self.args.webdata :
+            if  len(sys.argv)==2 :
+                try:
+                    with open('.WEB_AUTH_db.txt','r') as webcach:
+                        print(webcach.read())
+                        exit()
+                except Exception:
+                   print("[+] Error : DataBaes not  Found file not Exists Error")  
+                   exit()  
+            else:
+                print("[*] error : argumet --webdata ")
+                print("[+] use the option with out argumet < sudo ./snake_ap.py --webdata > ")                          
+                exit()       
+                  
           if self.args.Deauth :
              Mac_Format = re.compile(r'(?:[0-9a-fA-F]:?){12}')
              Mac_found = re.findall(Mac_Format , self.args.Deauth  )
@@ -428,6 +443,7 @@ class Fake_access_point:
             parser.add_argument('--dns', action='store_true', help="Enable DNS spoofing for selected websites.")
             parser.add_argument('--cert', action='store_true', help="Renew SSL certificates spoofing for specified websites.")
             parser.add_argument('--reset', action='store_true', help="Reset all Apache2 configurations, clear cache, and remove all Snake_AP setups.")
+            parser.add_argument('-W','--webdata', action='store_true', help="print credentol cated from websites.")
                         
             self.args = parser.parse_args()
             if len(sys.argv)> 1 :
