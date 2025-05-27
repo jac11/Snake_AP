@@ -1,4 +1,5 @@
-```text
+<!-- Markdown with inline HTML -->
+<pre style="font-family: monospace; background-color: #111; color: #33ff33; padding: 10px; border-radius: 8px;">
         __
        {0O}
        \__/
@@ -9,6 +10,8 @@
   (_____________)0o    
           _     
          (_)  
+</pre>
+   (_)  
 ```
 
 # 🐍 Snake_AP
