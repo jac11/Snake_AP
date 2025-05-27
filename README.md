@@ -1,18 +1,14 @@
-<!-- Markdown with inline HTML -->
-<pre style="font-family: monospace; background-color: #111; color: #33ff33; padding: 10px; border-radius: 8px;">
-        __
-       {0O}
-       \__/
-       /^/  SNAKE ACCESS POINT START
-      / /____  TO exit  CTRL+C   
-     (_______) BY : JACSTROY
-   _(_________)_ 
-  (_____________)0o    
-          _     
-         (_)  
-</pre>
-   (_)  
-```
+    __
+   {0O}
+   \__/
+   /^/  SNAKE ACCESS POINT START
+  / /____  TO exit  CTRL+C   
+ (_______) BY : JACSTROY
+
+(________)_
+(____________)0o
+_
+()
 
 # 🐍 Snake_AP
 
