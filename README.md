@@ -1,15 +1,4 @@
-    __
-   {0O}
-   \__/
-   /^/  SNAKE ACCESS POINT START
-  / /____  TO exit  CTRL+C   
- (_______) BY : JACSTROY
-
-(________)_
-(____________)0o
-_
-()
-
+<img src = "1.png">
 # 🐍 Snake_AP
 
 > **Created by: JACSTROY**
