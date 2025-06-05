@@ -1,4 +1,4 @@
-<img src = "1.png">
+<img src = "1w.png">
 # 🐍 Snake_AP
 
 # 🐍 Snake_AP
